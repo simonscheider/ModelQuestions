@@ -5,26 +5,29 @@
 from lark import Lark, tree
 
 l = Lark(r'''
-    spexperiment: ("(")? measure ("for" | "from" | "to") ("each")? control ("in" spatialextent)? (")")?
-    measure : (quantity | amount | concept) 
-    control : concept (condition)* ("of" spexperiment)?
-    amount : "amount of" concept ("with" quantity)*
+    spexperiment: measure control ("in" spatialextent)? 
+    measure : quantity | amount | concept       
+    control : ("for" | "from" | "to" | "of") ("each")? concept (condition)* 
+    amount : "amount of" (concept  | ("(")? spexperiment (")")?)        
     condition : spr onec | compr value 
     concept : onec | twoc
     onec : object | stuff | event | space | time
     twoc : onec "pair" 
     time : "time"
-    space : ("space" |"location" | "height")
+    space : "space" |"location" | "height"
     spr : "within" | "touching" | "away from"
     compr : "larger than" | "less than" | "equal to"
     value : STRING 
-    quantity : ("quantified" | "proportional") amount
-    aggr : 
-    object : "place" | "building" | "city" | "neighborhood"
-    stuff : "noise" | "temperature" | "green" | "landcover"
-    event : "trip" | "period" | "earthquake"
-    spatialextent : placename
-    placename : STRING
+    quantity : (quantified | aggregated) amount
+    quantified : intensive | extensive
+    intensive :  "proportional" | "density of" | "normalized" 
+    aggregated :  "average" | "maximal" | "minimal"
+    extensive : "quantified" | STRING
+    object : "place" | "building" | "city" | "neighborhood" | STRING
+    stuff : "noise" | "temperature" | "green" | "landcover" | STRING
+    event : "trip" | "period" | "earthquake" | STRING
+    spatialextent : STRING
+    
 
     %import common.ESCAPED_STRING -> STRING
     %import common.SIGNED_NUMBER 
@@ -34,8 +37,11 @@ l = Lark(r'''
 
 
 
-print(l.parse('proportional amount of space for green of landcover for each location in "Amsterdam"').pretty())
-
+print(l.parse('proportional amount of space of green for each neighborhood in "Amsterdam"').pretty())
+print(l.parse('quantified amount of space of green for each neighborhood in "Amsterdam"').pretty())
+print(l.parse('average amount of space for each place for each neighborhood in "Amsterdam"').pretty())
+print(l.parse('average amount of quantified amount of height of building for each neighborhood in "Amsterdam"').pretty())
+print(l.parse('average amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"').pretty())
 
 #print(l.parse('quantified amount of green for each location in "Amsterdam"'))
 
