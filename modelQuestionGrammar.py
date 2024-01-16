@@ -46,7 +46,9 @@ questionGrammar =  spatialExperimentGrammar + r'''
     factualcondition : spexperiment contemporaryreference ("is"|"are") ("such and such"|STRING)
     counterfactualcondition : spexperiment contemporaryreference ("was"|"were") ("such and such"|STRING)
     projectedcondition : spexperiment futurereference ("will be") ("such and such"|STRING)
-    contemporaryinference : "What" ("is"|"are") ("the")? spexperiment contemporaryreference ("given that" ("the")?  factualcondition)?
+    statisticalmodel : spexperiment contemporaryreference
+    transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
+    contemporaryinference : "What" ("is"|"are") ("the")? (statisticalmodel|transformationmodel) 
     prediction : "What" "will be" ("the")? spexperiment futurereference "given that" ("the")?  factualcondition 
     retrodiction : "What" "could have been" ("the")? spexperiment pastreference "given that" ("the")? factualcondition 
     projection : "What" "would be" ("the")? spexperiment futurereference ("if"|"when") ("the")? counterfactualcondition 
