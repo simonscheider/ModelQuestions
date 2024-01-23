@@ -4,6 +4,7 @@
 # Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
 from lark import Lark, tree
 from rich import print
+import sys
 
 #Grammars:
 footer= r'''
@@ -25,17 +26,17 @@ spatialExperimentGrammar = r'''
     onec : object | event | stuff | space | time
     twoc : onec "pair" 
     time : "time"
-    space : "space" |"location" | "height" | "distance"
-    spr : "within" | "touching" | "away from" | "west of"
-    compr : "larger than" | "less than" | "equal to"    
-    quantity : quantified simpleamount | aggregated relamount
+    space : "space" |"location" | "height" | "distance" | STRING
+    spr : "within" | "touching" | "away from" | "west of" | STRING
+    compr : "larger than" | "less than" | "equal to" | STRING   
+    quantity : quantified simpleamount | aggregated relamount 
     quantified : intensive | extensive
     intensive :  "proportional" | "density of" | "normalized" 
     optimal : "maximal" | "minimal"
-    aggregated :  "averaged" |  optimal
-    extensive : "quantified" 
-    object : "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant"| STRING
-    stuff : "noise" | "temperature" | "green" | "landcover" | "health" | STRING
+    aggregated :  "averaged" |  optimal | "sum of" ("the")?
+    extensive : "quantified" | "cost of" ("the")?
+    object : "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant" | "windmill" | "windfarm"| "consumer"| STRING
+    stuff : "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol"| STRING
     event : "trip" | "period" | "earthquake" | STRING
     spatialextent : STRING
     value : NUMBER STRING
@@ -43,9 +44,9 @@ spatialExperimentGrammar = r'''
 
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporaryinference | prediction | retrodiction | projection | retrojection) ("?")?    
-    factualcondition : spexperiment contemporaryreference ("is"|"are") ("such and such"|STRING)
-    counterfactualcondition : spexperiment contemporaryreference ("was"|"were") ("such and such"|STRING)
-    projectedcondition : spexperiment futurereference ("will be") ("such and such"|STRING)
+    factualcondition : spexperiment contemporaryreference ("is"|"are") ("such and such"| "maximal" | "minimal" | compr value| STRING)
+    counterfactualcondition : spexperiment contemporaryreference ("was"|"were") ("such and such"| "maximal" | "minimal" | compr value| STRING)
+    projectedcondition : spexperiment futurereference ("will be") ("such and such"| "maximal" | "minimal" | compr value| STRING)
     statisticalmodel : spexperiment contemporaryreference
     transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
     contemporaryinference : "What" ("is"|"are") ("the")? (statisticalmodel|transformationmodel) 
@@ -58,24 +59,62 @@ questionGrammar =  spatialExperimentGrammar + r'''
     futurereference : "in the future" | "later"     
     '''
 
+
+def make_png(filename,parser, sentence):
+        tree.pydot__tree_to_png(parser.parse(sentence), filename)
+
+
+def make_dot(filename,parser, sentence):
+        tree.pydot__tree_to_dot(parser.parse(sentence), filename)
+
+def get_variable_name(variable):
+    for name in globals():
+        if id(globals()[name]) == id(variable):
+            return name
+    for name in locals():
+        if id(locals()[name]) == id(variable):
+            return name
+    return None
+def parsetrees(parser, questions):
+        cnt = 0
+        for e in questions:
+                cnt += 1
+                print(parser.parse(e))
+                make_png(str(get_variable_name(questions))+str(cnt) + ".png", parser, e)
+
 l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', strict =True, keep_all_tokens=True)
-print(l_spEx.parse('proportional amount of space of green for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('quantified amount of space of green for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('averaged amount of space of building for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('averaged amount of quantified amount of height of building for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('proportional amount of space of green west of "Ij" for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('quantified amount of building of height larger than 5 "m" for each neighborhood in "Amsterdam"'))
-print(l_spEx.parse('time to hospital with minimal quantified amount of distance from each building in "Amsterdam"'))
+
+experiments = [
+'proportional amount of space of green for each neighborhood in "Amsterdam"',
+'quantified amount of space of green for each neighborhood in "Amsterdam"',
+'averaged amount of space of building for each neighborhood in "Amsterdam"',
+'averaged amount of quantified amount of height of building for each neighborhood in "Amsterdam"',
+'averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"',
+'proportional amount of space of green west of "Ij" for each neighborhood in "Amsterdam"',
+'quantified amount of building of height larger than 5 "m" for each neighborhood in "Amsterdam"',
+'time to hospital with minimal quantified amount of time from each building in "Rotterdam"',
+'sum of amount of (energy for each windmill) for windfarm',
+'location for each windmill of windfarm'
+]
+
+parsetrees(l_spEx,experiments)
+
 
 l_questions = Lark(questionGrammar  + footer
         ,parser='earley', start='question', strict =True, keep_all_tokens=True)
+questions =[
+'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for windfarm in the future will be maximal?',
+'What would be the sum of the amount of (ethanol for each consumer) for "Brazil" in the future if the cost of the amount of (ethanol for each consumer) for "Brazil" was equal to 1.23 R/l now?'
 
-print(l_questions.parse('What is the proportional amount of space of green for each neighborhood in "Amsterdam" now?'))
-print(l_questions.parse('What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building now was such and such?'))
-print(l_questions.parse('What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant in the future will be such and such?'))
-
+# print(l_questions.parse('What is the proportional amount of space of green for each neighborhood in "Amsterdam" now?'))
+# print(l_questions.parse('What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building now was such and such?'))
+# print(l_questions.parse('What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant in the future will be such and such?'))
+]
 #print(l.parse('quantified amount of green for each location in "Amsterdam"'))
 
+parsetrees(l_questions,questions)
+
+
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
