@@ -15,38 +15,40 @@ footer= r'''
         %ignore WS
 '''
 spatialExperimentGrammar = r'''    
-    spexperiment: measure (control)* ("in" spatialextent)? 
+    spexperiment: uncontrexp | contrexp
+    uncontrexp: measure ("in" spatialextent)?
+    contrexp: measure (control)+ ("in" spatialextent)?
     measure : quantity | amount | concept  
     control : (("for" | "from" | "to" | "of") ("each")? spexperiment) | condcontrol 
     condcontrol : spr onec | compr value | "with" optimal quantified simpleamount
     amount :  simpleamount  |  relamount 
-    simpleamount : "amount of" concept
-    relamount : "amount of" ("(")? spexperiment (")")?     
+    simpleamount : "amount of" ("(")? uncontrexp (")")?  
+    relamount : "amount of" ("(")? contrexp (")")?     
     concept : onec | twoc
-    onec : object | event | stuff | space | time
+    onec : object | event | stuff | space | time | onec "and" onec
     twoc : onec "pair" 
     time : "time"
     space : "space" |"location" | "height" | "distance" | STRING
     spr : "within" | "touching" | "away from" | "west of" | STRING
-    compr : "larger than" | "less than" | "equal to" | STRING   
+    compr : "larger than" | "less than" | "equal to" | "changed to" | STRING   
     quantity : quantified simpleamount | aggregated relamount 
     quantified : intensive | extensive
-    intensive :  "proportional" | "density of" | "normalized" 
+    intensive :  "proportional" | "density of" ("the")? | "normalized" 
     optimal : "maximal" | "minimal"
     aggregated :  "averaged" |  optimal | "sum of" ("the")?
-    extensive : "quantified" | "cost of" ("the")?
-    object : "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant" | "windmill" | "windfarm"| "consumer"| STRING
-    stuff : "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol"| STRING
+    extensive : "quantified" | "capacity of" ("the")?
+    object : "lifestock" | "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant" | "windmill" | "windfarm" | "consumer" | "producer" | STRING
+    stuff :  "rain" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | STRING
     event : "trip" | "period" | "earthquake" | STRING
     spatialextent : STRING
-    value : NUMBER STRING
+    value : NUMBER STRING | STRING
     '''
 
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporaryinference | prediction | retrodiction | projection | retrojection) ("?")?    
-    factualcondition : spexperiment contemporaryreference ("is"|"are") ("such and such"| "maximal" | "minimal" | compr value| STRING)
-    counterfactualcondition : spexperiment contemporaryreference ("was"|"were") ("such and such"| "maximal" | "minimal" | compr value| STRING)
-    projectedcondition : spexperiment futurereference ("will be") ("such and such"| "maximal" | "minimal" | compr value| STRING)
+    factualcondition : spexperiment ("is"|"are"|"was"|"were") ("such and such"| optimal | compr value| STRING) contemporaryreference 
+    counterfactualcondition : spexperiment ("was"|"were") ("such and such"| optimal | compr value| STRING) contemporaryreference 
+    projectedcondition : spexperiment ("will be") ("such and such"| optimal | compr value| STRING) futurereference 
     statisticalmodel : spexperiment contemporaryreference
     transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
     contemporaryinference : "What" ("is"|"are") ("the")? (statisticalmodel|transformationmodel) 
@@ -54,9 +56,9 @@ questionGrammar =  spatialExperimentGrammar + r'''
     retrodiction : "What" "could have been" ("the")? spexperiment pastreference "given that" ("the")? factualcondition 
     projection : "What" "would be" ("the")? spexperiment futurereference ("if"|"when") ("the")? counterfactualcondition 
     retrojection : "What" "should be" ("the")? spexperiment contemporaryreference ("so"|"such") "that" ("the")? projectedcondition
-    contemporaryreference : "now" | "currently" | "at present"
-    pastreference : "earlier" | "in the past" 
-    futurereference : "in the future" | "later"     
+    contemporaryreference : "now" | "currently" | "at present" | "from now on" | "at the end of the African humid period"
+    pastreference : "earlier" | "in the past" | "10.000 years ago" 
+    futurereference : "in the future" | "later"   | "in 2030" | "tomorrow"
     '''
 
 
@@ -88,14 +90,14 @@ l_spEx = Lark(spatialExperimentGrammar + footer
 experiments = [
 'proportional amount of space of green for each neighborhood in "Amsterdam"',
 'quantified amount of space of green for each neighborhood in "Amsterdam"',
-'averaged amount of space of building for each neighborhood in "Amsterdam"',
+'averaged amount of (space of building) for each neighborhood in "Amsterdam"',
 'averaged amount of quantified amount of height of building for each neighborhood in "Amsterdam"',
 'averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"',
 'proportional amount of space of green west of "Ij" for each neighborhood in "Amsterdam"',
 'quantified amount of building of height larger than 5 "m" for each neighborhood in "Amsterdam"',
-'time to hospital with minimal quantified amount of time from each building in "Rotterdam"',
+'quantified amount of time to hospital with minimal quantified amount of time from each building in "Rotterdam"',
 'sum of amount of (energy for each windmill) for windfarm',
-'location for each windmill of windfarm'
+'location for each windmill of windfarm',
 ]
 
 parsetrees(l_spEx,experiments)
@@ -104,8 +106,12 @@ parsetrees(l_spEx,experiments)
 l_questions = Lark(questionGrammar  + footer
         ,parser='earley', start='question', strict =True, keep_all_tokens=True)
 questions =[
-'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for windfarm in the future will be maximal?',
-'What would be the sum of the amount of (ethanol for each consumer) for "Brazil" in the future if the cost of the amount of (ethanol for each consumer) for "Brazil" was equal to 1.23 R/l now?'
+'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for windfarm will be maximal in the future?',
+'What would be the sum of the amount of (capacity of the amount of ethanol for each producer) for "Brazil" in 2030 if the proportional amount of (tax of amount of ethanol for each consumer) of "Brazil" was equal to 1.23 "R/l" from now on ?',
+'What would be the averaged amount of (ethanol for each consumer) for "Brazil" in 2030 if the proportional amount of (tax of amount of ethanol for each consumer) of "Brazil" was equal to 1.23 "R/l" from now on?',
+'What could have been the density of amount of lifestock for each location in "Sudan" 10.000 years ago given that the landcover for each location in "Sudan" was equal to "arid land" at the end of the African humid period?',
+'What will be the sum of the amount of rain for each location in "Dortmund" tomorrow given that the air pressure and temperature for each location in "Germany" is such and such now?',
+'What is the time to hospital with minimal quantified amount of time from each building in "Rotterdam" at present?'
 
 # print(l_questions.parse('What is the proportional amount of space of green for each neighborhood in "Amsterdam" now?'))
 # print(l_questions.parse('What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building now was such and such?'))
