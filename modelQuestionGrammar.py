@@ -14,16 +14,19 @@ footer= r'''
         %import common.WS 
         %ignore WS
 '''
+    # spexperiment: uncontrexp | contrexp
+    # uncontrexp: measure ("in" spatialextent)?
+    # contrexp: measure (control)+ ("in" spatialextent)?
+    # simpleamount : "amount of" ("(")? uncontrexp (")")?
+    # relamount : "amount of" ("(")? contrexp (")")?
 spatialExperimentGrammar = r'''    
-    spexperiment: uncontrexp | contrexp
-    uncontrexp: measure ("in" spatialextent)?
-    contrexp: measure (control)+ ("in" spatialextent)?
+    spexperiment: measure (control)* ("in" spatialextent)? 
     measure : quantity | amount | concept  
     control : (("for" | "from" | "to" | "of") ("each")? spexperiment) | condcontrol 
     condcontrol : spr onec | compr value | "with" optimal quantified simpleamount
     amount :  simpleamount  |  relamount 
-    simpleamount : "amount of" ("(")? uncontrexp (")")?  
-    relamount : "amount of" ("(")? contrexp (")")?     
+    simpleamount : "amount of" ("(")? concept (")")?  
+    relamount : "amount of" ("(")? spexperiment (")")?     
     concept : onec | twoc
     onec : object | event | stuff | space | time | onec "and" onec
     twoc : onec "pair" 
@@ -111,13 +114,12 @@ questions =[
 'What would be the averaged amount of (ethanol for each consumer) for "Brazil" in 2030 if the proportional amount of (tax of amount of ethanol for each consumer) of "Brazil" was equal to 1.23 "R/l" from now on?',
 'What could have been the density of amount of lifestock for each location in "Sudan" 10.000 years ago given that the landcover for each location in "Sudan" was equal to "arid land" at the end of the African humid period?',
 'What will be the sum of the amount of rain for each location in "Dortmund" tomorrow given that the air pressure and temperature for each location in "Germany" is such and such now?',
-'What is the time to hospital with minimal quantified amount of time from each building in "Rotterdam" at present?'
-
-# print(l_questions.parse('What is the proportional amount of space of green for each neighborhood in "Amsterdam" now?'))
-# print(l_questions.parse('What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building now was such and such?'))
-# print(l_questions.parse('What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant in the future will be such and such?'))
+'What is the time to hospital with minimal quantified amount of time from each building in "Rotterdam" at present?',
+'What is the proportional amount of space of green for each neighborhood in "Amsterdam" now?',
+'What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building was such and such now?',
+'What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant will be such and such in the future?'
 ]
-#print(l.parse('quantified amount of green for each location in "Amsterdam"'))
+
 
 parsetrees(l_questions,questions)
 
