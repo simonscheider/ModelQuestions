@@ -82,8 +82,8 @@ def parsetrees(parser, questions):
         for e in questions:
                 cnt += 1
                 print(parser.parse(e))
-                make_png("ModelQuestions/"+str(get_variable_name(questions))+str(cnt) + ".png", parser, e)
-                make_dot("ModelQuestions/"+str(get_variable_name(questions)) + str(cnt) + ".gv", parser, e)
+                make_png("ModelQuestions/parseTrees/"+str(get_variable_name(questions))+str(cnt) + ".png", parser, e)
+                make_dot("ModelQuestions/parseTrees/"+str(get_variable_name(questions)) + str(cnt) + ".gv", parser, e)
 
 l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', strict =True, keep_all_tokens=True)
