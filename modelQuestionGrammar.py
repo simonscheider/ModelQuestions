@@ -122,7 +122,7 @@ questions =[
 'What will be the temperature in "Utrecht" tomorrow given that the temperature in "Utrecht" is 5 C today?',
 'What could have been the event in "Utrecht" yesterday causing the proportional amount of water for soil in "Utrecht" being 0.3 today?',
 'What would be the temperature in "Utrecht" in 20 years if the proportional amount of CO2 emissions of the world’s economy were halved today?',
-'What should have been the amount of green in "Utrecht" today so that the maximum temperature in "Utrecht" will be below 30 C this summer?',
+'What should be the amount of green in "Utrecht" today so that the maximum temperature in "Utrecht" will be below 30 C this summer?',
 
 'What is the closest ambulance station for each building in "Rotterdam" at present given that the location of each ambulance station is such and such now?',
 'What will be the time from the closest ambulance station to each building in "Rotterdam" from now on given that the location of each ambulance station is such and such now?',
