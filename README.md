@@ -7,7 +7,7 @@ This repository contains examples and Python code for a **BNF grammar** that can
 The basic idea of the question grammar is illustrated with this image:
 ![question model](questionmodel.png)
 
-The release coresponding to the published material can be found here ![release](https://github.com/simonscheider/ModelQuestions/assets/3295063/1cd1e746-46e5-43c7-a7c0-454573d8b1ba)
+The release coresponding to the published material can be found here [![DOI](https://zenodo.org/badge/743147257.svg)](https://zenodo.org/doi/10.5281/zenodo.11066986)
 
 
 ## Libraries and Python code
