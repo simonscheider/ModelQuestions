@@ -17,4 +17,6 @@ import sys
 The example questions in the paper (and many more examples), as well as the grammar implemention, can be found in the file:
 [modelQuestionGrammar.py](modelQuestionGrammar.py)
 
-
+## Parse trees
+The parse trees of the exampe questions can be found here:
+[parseTrees](parseTrees/)
