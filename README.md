@@ -1,4 +1,4 @@
-# ModelQuestions
+# Spatio-temporal modeling questions
  
 ## Description and source
 This repository contains examples and Python code for a **BNF grammar** that can be used for **parsing spatio-temporal modeling questions**. The grammar is a model of the information theoretic purpose of spatio-temporal models. It is part of the publication: 
