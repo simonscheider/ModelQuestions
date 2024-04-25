@@ -7,6 +7,9 @@ This repository contains examples and Python code for a **BNF grammar** that can
 The basic idea of the question grammar is illustrated with this image:
 ![question model](questionmodel.png)
 
+The release coresponding to the published material can be found here ![release](https://github.com/simonscheider/ModelQuestions/assets/3295063/1cd1e746-46e5-43c7-a7c0-454573d8b1ba)
+
+
 ## Libraries and Python code
 The grammar is implemented in [Lark](https://github.com/lark-parser/lark): 
 ```
