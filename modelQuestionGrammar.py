@@ -3,7 +3,7 @@
 
 from lark import Lark, tree
 from rich import print
-import sys
+#import pydot
 
 #Grammars:
 footer= r'''
@@ -80,12 +80,14 @@ def parsetrees(parser, questions):
         cnt = 0
         for e in questions:
                 cnt += 1
-                print(parser.parse(e))
-                make_png("ModelQuestions/parseTrees/"+str(get_variable_name(questions))+str(cnt) + ".png", parser, e)
-                make_dot("ModelQuestions/parseTrees/"+str(get_variable_name(questions)) + str(cnt) + ".gv", parser, e)
+                print(e)
+                print(parser.parse(e).pretty())
+                #print(parser.parse(e))
+                #make_png("ModelQuestions/parseTrees/"+str(get_variable_name(questions))+str(cnt) + ".png", parser, e)
+                #make_dot("ModelQuestions/parseTrees/"+str(get_variable_name(questions)) + str(cnt) + ".gv", parser, e)
 
 l_spEx = Lark(spatialExperimentGrammar + footer
-        ,parser='earley', start='spexperiment', strict =True, keep_all_tokens=True)
+        ,parser='earley', start='spexperiment', keep_all_tokens=True)
 
 experiments = [
 'proportional amount of space of green for each neighborhood in "Amsterdam"',
@@ -104,7 +106,7 @@ parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
-        ,parser='earley', start='question', strict =True, keep_all_tokens=True)
+        ,parser='earley', start='question', keep_all_tokens=True)
 testquestions=[
 'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for windfarm will be maximal in the future?',
 'What would be the sum of the amount of (capacity of the amount of ethanol for each producer) for "Brazil" in 2030 if the proportional amount of (tax of amount of ethanol for each consumer) of "Brazil" was equal to 1.23 R/l from now on ?',
