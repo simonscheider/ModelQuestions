@@ -14,7 +14,7 @@ spatialExperimentGrammar = r'''
     spexperiment: measure (control)* ("in" spatialextent)?
     measure : quantity | amount | concept
     condmodifier : "the closest" | "the smallest" | "this" | "maximum" | "minimum"
-    control : (("for" | "from" | "to" | "of" | "between") ("each")? spexperiment) | condcontrol
+    control : (("for" | "from" | "to" | "of" | "between" | "per") ("each")? spexperiment) ( "and" (("for" | "from" | "to" | "of" | "between" | "per") ("each")? spexperiment) )* | condcontrol
     condcontrol : spr onec | compr value | "with" optimal quantified simpleamount
     amount :  simpleamount  |  relamount
     simpleamount : ("amount of")? ("(")? concept (")")?
@@ -22,9 +22,9 @@ spatialExperimentGrammar = r'''
     concept : condmodifier? (onec | twoc)
     onec : object ("s")? | event ("s")? | stuff | space | time | onec "and" onec
     twoc : onec "pair" | "pair of" onec
-    time : "time" | "travel time"
+    time : "time" | "travel time" | "hour"
     space : "space" |"location" | "height" | "distance" | STRING
-    spr : "within" | "touching" | "away from" | "west of" | STRING
+    spr : "within" | "touching" | "away from" | "west of" | "near" | STRING
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | STRING
     quantity : quantified simpleamount | aggregated relamount
     quantified : intensive | extensive
@@ -33,12 +33,12 @@ spatialExperimentGrammar = r'''
     aggregated :  "averaged" |  optimal | "sum of" ("the")?
     extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")?
     object : "lifestock" | "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor location"| "the world’s economy"|STRING
-    stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions" | "NO2" | "PM10" | "PM2.5" | "gas extraction" | "Texelhopper busstops" | "road speeds" | STRING
+    stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions" | "NO2" | "road speeds" | "gas extraction" | "magnitude" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     spatialextent : STRING
     value : NUMBER unit | "infinite" unit | STRING  | NUMBER | relativechange
-    unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" |
-    relativechange : ("increased"|"decreased"|"doubled"|"halved") ("by" NUMBER ("percent")?)?
+    unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" 
+    relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
     '''
 
 questionGrammar = spatialExperimentGrammar + r'''
@@ -62,9 +62,11 @@ questionGrammar = spatialExperimentGrammar + r'''
 parser = Lark(questionGrammar + footer, parser='earley', start='question', keep_all_tokens=True)
 
 #question
-#question = 'What should be the amount of green for each neighborhood in "Amsterdam" now so that the proportional amount of NO2 will be below 20 µg/m³ this summer?'
-#question = 'What would be the averaged amount of travel time between Texelhopper busstops in "Texel" in the future if the road speeds were increased by 20 percent today?'
-question = 'What would be the proportional amount of earthquakes for each location in "Groningen" in 2030 if the amount of gas extraction were halved today?'
+#question = 'What is the averaged amount of NO2 for each neighborhood in "Amsterdam" now?'
+#question = 'What is the proportional amount of NO2 near "major roads" in "Amsterdam" now?'
+#question = 'What will be the averaged amount of NO2 for each neighborhood in "Amsterdam" tomorrow given that the NO2 for each sensor location in "Amsterdam" is such and such now?'
+#question = 'What would be the averaged noise in "Amsterdam" tomorrow if road speeds were reduced by 20 percent now?'
+#question = 'What could have been the averaged amount of noise per each neighborhood per each hour in "Amsterdam" last week given that the averaged amount of noise for each neighborhood is such and such now?'
 
 #parser
 try:
@@ -73,7 +75,7 @@ try:
     print(parsed_tree.pretty())
     output_folder = "parseTreesCasper"
 
-    out_file = os.path.join(output_folder, "parse_tree.png")
+    out_file = os.path.join(output_folder, "parsetree_multiplecontrol.png")
     tree.pydot__tree_to_png(parsed_tree, out_file)
 
 except Exception as e:
