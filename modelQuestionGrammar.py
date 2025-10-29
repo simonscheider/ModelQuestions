@@ -15,11 +15,11 @@ footer= r'''
 '''
 spatialExperimentGrammar = r'''    
     spexperiment: (measure)+ (control)* (fix)* 
-    measure : nominator | concept | amount | quantity        
-    fix : spr nominator | tr "this" (time|event) | compr value | value | "with" optimal quantity
+    measure : concept | amount | quantity        
+    fix : ("for" | "from" | "to" | "of" | "between") nominator | spr nominator | tr "this" (time|event) | compr value | value | "with" optimal quantity
     control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")?)              
     amount : ("amount of" | "interval of")? ("(")? spexperiment (")")?     
-    nominator : "this" concept | quantity | value | STRING
+    nominator : "this" (concept | quantity) | value | STRING
     concept : onec | twoc
     onec : object ("s")? | event ("s")? | stuff | space | time | quantity
     twoc : onec "pair" | "pair of" onec
@@ -30,7 +30,7 @@ spatialExperimentGrammar = r'''
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
     quantity : (quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
     quantified : intensive | extensive
-    intensive :  "proportional" | "density of" ("the")? | "normalized" 
+    intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" 
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest") 
     aggregated :  "averaged" |  optimal | "sum of" ("the")?
     extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")? 
@@ -110,7 +110,7 @@ l_questions = Lark(questionGrammar  + footer
         ,parser='earley', start='question', keep_all_tokens=True)
 testquestions=[
 'What should be the amount of green for each neighborhood in "Amsterdam" now so that the proportional amount of NO2 will be below 20 µg/m³ this summer?',
-'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for windfarm will be maximal in the future?',
+'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for this windfarm will be maximal in the future?',
 'What would be the sum of the amount of (capacity of the amount of ethanol for each producer) for "Brazil" in 2030 if the proportional amount of (tax of amount of ethanol for each consumer) of "Brazil" was equal to 1.23 R/l from now on ?',
 'What would be the averaged amount of (ethanol for each consumer) for "Brazil" in 2030 if the proportional amount of (tax of amount of ethanol for each consumer) of "Brazil" was equal to 1.23 R/l from now on?',
 'What could have been the density of amount of lifestock for each location in "Sudan" 10.000 years ago given that the landcover for each location in "Sudan" was equal to "arid land" at the end of the African humid period?',
@@ -131,7 +131,7 @@ questions =[
 'What is the closest ambulance station for each building in "Rotterdam" at present given that the location of each ambulance station is such and such now?',
 'What will be the time from the closest ambulance station to each building in "Rotterdam" from now on given that the location of each ambulance station is such and such now?',
 'What will be the sum of the amount of rain for each location in "Dortmund" tomorrow given that the air pressure temperature for each location in "Germany" is such and such now?',
-'What could have been the event for each road intersection pair in "Rotterdam" last week causing the travel time of this ambulance station to this road accident in "Rotterdam" to be 30 minutes now?',
+#'What could have been the event for each road intersection pair in "Rotterdam" last week causing the travel time of this ambulance station to this road accident in "Rotterdam" to be 30 minutes now?',
 'What could have been the route for each language group in "the Amazon" starting 15.000 years ago causing the location of language groups to be such and such at present?',
 'What would be the travel time from the closest ambulance station to each building in "Rotterdam" in the future if the travel time between this road intersection pair was infinite minutes from now on?',
 'What would be the sum of the production of ethanol for each producer in "Brazil" in 2030 if the proportional amount of tax for ethanol for each consumer in "Brazil" was equal to 1.23 R/l from now on',
@@ -141,7 +141,7 @@ questions =[
 parsetrees(l_questions,questions)
 
 questions_caspar=[
-'What is the averaged amount of NO2 for each (location of some sensor) for each year in "Amsterdam" now?',
+'What is the averaged proportion of NO2 for each location of some sensor for each year in "Amsterdam" now?',
 'What is the amount of space for each (interval of quantified amount of noise in decibel) in "Amsterdam" now?',
 'What is the location magnitude time duration of each earthquake in "Amsterdam" until now?',
 'What is the location of each tree in "Amsterdam" now?'
