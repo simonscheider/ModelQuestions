@@ -16,7 +16,7 @@ footer= r'''
 spatialExperimentGrammar = r'''    
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount | quantity        
-    fix : spr nominator | compr value | "with" optimal quantity
+    fix : spr nominator | compr value | value | "with" optimal quantity
     control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")?)              
     amount : ("amount of" | "interval of")? ("(")? spexperiment (")")?     
     nominator : "this" concept | quantity | value | STRING
@@ -36,15 +36,16 @@ spatialExperimentGrammar = r'''
     object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
-    value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved"
+    value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³"
+    relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
     '''
 
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
-    factualcondition : spexperiment ("is"|"are"|"was"|"were"|"to be"|"being") ("such and such"| optimal | compr value| value | STRING)  contemporaryreference 
-    counterfactualcondition : spexperiment ("was"|"were") ("such and such"| optimal | compr value| value | STRING) contemporaryreference 
-    projectedcondition : spexperiment ("will be"|"being") ("such and such"| optimal | compr value | value | STRING) futurereference 
+    factualcondition : spexperiment ("is"|"are"|"was"|"were"|"to be"|"being") ("such and such"| optimal | fix)  contemporaryreference 
+    counterfactualcondition : spexperiment ("was"|"were") ("such and such"| optimal | fix) contemporaryreference 
+    projectedcondition : spexperiment ("will be"|"being") ("such and such"| optimal | fix) futurereference 
     simplemodel : spexperiment contemporaryreference
     transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
     contemporary : "What" ("is"|"are") ("the")? (simplemodel|transformationmodel) 
