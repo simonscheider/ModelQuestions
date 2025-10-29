@@ -28,7 +28,7 @@ spatialExperimentGrammar = r'''
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "at" | STRING
     tr : "before" | "after" | "during"
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
-    quantity : quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance"
+    quantity : (quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "density of" ("the")? | "normalized" 
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest") 
@@ -38,7 +38,7 @@ spatialExperimentGrammar = r'''
     stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
-    unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³"
+    unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
     relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
     '''
 
@@ -142,7 +142,7 @@ parsetrees(l_questions,questions)
 
 questions_caspar=[
 'What is the averaged amount of NO2 for each (location of some sensor) for each year in "Amsterdam" now?',
-'What is the amount of space for each (interval of noise) in "Amsterdam" now?',
+'What is the amount of space for each (interval of quantified amount of noise in decibel) in "Amsterdam" now?',
 'What is the location magnitude time duration of each earthquake in "Amsterdam" until now?',
 'What is the location of each tree in "Amsterdam" now?'
 ]
