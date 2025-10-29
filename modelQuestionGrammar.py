@@ -15,24 +15,23 @@ footer= r'''
 '''
 spatialExperimentGrammar = r'''    
     spexperiment: (measure)+ (control)* (fix)* 
-    measure : concept | amount            
-    control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")?)     
+    measure : nominator | concept | amount            
+    control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")? ("s")?)     
     fix : ("for" | "from" | "to" | "of" | "between") nominator | spr nominator | tr "this" (time|event) | compr value | value | "with" optimal magnitude         
-    amount : ("amount of" | "interval of")? ("(")? spexperiment (")")?     
-    nominator : "this" (concept | amount ) | value | STRING    
+    amount : (("amount of" | "interval of")? ("(")? spexperiment (")")? ("s")?)  | "sum of" ("the")? amount  
+    nominator : ("this") (concept | amount) | optimal amount | value | STRING    
     concept : onec | twoc
-    onec : object ("s")? | event ("s")? | stuff | space | time | magnitude
+    onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
     time : "time" | "travel time" | "year" | "month"
     space : "space" | "location" | "height" | STRING
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "at" | STRING
     tr : "before" | "after" | "during"
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
-    magnitude : (quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
+    magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" 
-    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest") 
-    aggregated :  "averaged" |  optimal | "sum of" ("the")?
+    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest")    
     extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")? 
     object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
@@ -100,7 +99,8 @@ experiments = [
 'sum of amount of (energy for each windmill) for windfarm',
 'location for each windmill of windfarm',
 'space of each municipality',
-'time before this earthquake'
+'time before this earthquake',
+'amount of trees in "Utrecht"'
 ]
 
 parsetrees(l_spEx,experiments)
