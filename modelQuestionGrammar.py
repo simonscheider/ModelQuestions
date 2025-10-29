@@ -16,7 +16,7 @@ footer= r'''
 spatialExperimentGrammar = r'''    
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount | quantity        
-    fix : spr nominator | compr value | value | "with" optimal quantity
+    fix : spr nominator | tr "this" (time|event) | compr value | value | "with" optimal quantity
     control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")?)              
     amount : ("amount of" | "interval of")? ("(")? spexperiment (")")?     
     nominator : "this" concept | quantity | value | STRING
@@ -24,9 +24,10 @@ spatialExperimentGrammar = r'''
     onec : object ("s")? | event ("s")? | stuff | space | time | quantity
     twoc : onec "pair" | "pair of" onec
     time : "time" | "travel time" | "year" | "month"
-    space : "space" |"location" | "height" | STRING
+    space : "space" | "location" | "height" | STRING
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "at" | STRING
-    compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | STRING   
+    tr : "before" | "after" | "during"
+    compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
     quantity : quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance"
     quantified : intensive | extensive
     intensive :  "proportional" | "density of" ("the")? | "normalized" 
@@ -98,7 +99,9 @@ experiments = [
 'quantified amount of time to hospital with minimal quantified amount of time from each building in "Rotterdam"',
 'sum of amount of (energy for each windmill) for windfarm',
 'location for each windmill of windfarm',
-'space of each municipality']
+'space of each municipality',
+'time before this earthquake'
+]
 
 parsetrees(l_spEx,experiments)
 
