@@ -139,7 +139,7 @@ parsetrees(l_questions,questions)
 questions_caspar=[
 'What is the averaged amount of NO2 for each (location of some sensor) for each year in "Amsterdam" now?',
 'What is the amount of space for each (interval of noise) in "Amsterdam" now?',
-'What is the location magnitude duration of each earthquake in "Amsterdam" until now?',
+'What is the location magnitude time duration of each earthquake in "Amsterdam" until now?',
 'What is the location of each tree in "Amsterdam" now?'
 ]
 
