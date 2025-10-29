@@ -1,6 +1,8 @@
 import os
 from lark import Lark
 from lark import tree
+from slugify import slugify
+import pydot
 
 #grammar
 footer = r'''
@@ -22,17 +24,17 @@ spatialExperimentGrammar = r'''
     concept : condmodifier? (onec | twoc)
     onec : object ("s")? | event ("s")? | stuff | space | time | onec "and" onec
     twoc : onec "pair" | "pair of" onec
-    time : "time" | "travel time" | "hour"
+    time : "time" | "travel time" | "hour" | "year"
     space : "space" |"location" | "height" | "distance" | STRING
-    spr : "within" | "touching" | "away from" | "west of" | "near" | STRING
+    spr : "within" | "touching" | "away from" | "west of" | "near" | "at" | STRING
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | STRING
     quantity : quantified simpleamount | aggregated relamount
     quantified : intensive | extensive
     intensive :  "proportional" | "density of" ("the")? | "normalized"
     optimal : "maximal" | "minimal"
     aggregated :  "averaged" |  optimal | "sum of" ("the")?
-    extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")?
-    object : "lifestock" | "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor location"| "the world’s economy"|STRING
+    extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")? | "interval"
+    object : "tree" | "lifestock" | "place" | "building" | "city" | "neighborhood" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions" | "NO2" | "road speeds" | "gas extraction" | "magnitude" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     spatialextent : STRING
@@ -53,7 +55,7 @@ questionGrammar = spatialExperimentGrammar + r'''
     retrodiction : "What" "could have been" ("the")? spexperiment pastreference ("given that" | "causing") ("the")? factualcondition
     projection : "What" "would be" ("the")? spexperiment futurereference ("if"|"when") ("the")? counterfactualcondition
     retrojection : "What" "should" ("have")? ("be"|"been") ("the")? spexperiment contemporaryreference ("so"|"such") "that" ("the")? projectedcondition
-    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "this summer" | "at the end of the African humid period")
+    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now" | "this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later" | "in 2030" | "tomorrow" | "from now on" | "in 20 years" |"this summer")
     '''
@@ -68,14 +70,20 @@ parser = Lark(questionGrammar + footer, parser='earley', start='question', keep_
 #question = 'What would be the averaged noise in "Amsterdam" tomorrow if road speeds were reduced by 20 percent now?'
 #question = 'What could have been the averaged amount of noise per each neighborhood per each hour in "Amsterdam" last week given that the averaged amount of noise for each neighborhood is such and such now?'
 
+
+#question_simon = 'What is the averaged amount of NO2 for each location at sensor for each year in "Amsterdam" now?'
+#question_simon = 'What is the space of each interval amount of noise in "Amsterdam" now?'
+#question_simon = 'What is the location of each earthquake in "Amsterdam" until now?'
+question_simon = 'What is the location of each tree in "Amsterdam" now?'
+
 #parser
 try:
-    parsed_tree = parser.parse(question)
+    parsed_tree = parser.parse(question_simon)
     print("\nParsed successfully Parse tree:\n")
     print(parsed_tree.pretty())
     output_folder = "parseTreesCasper"
 
-    out_file = os.path.join(output_folder, "parsetree_multiplecontrol.png")
+    out_file = os.path.join(output_folder, slugify(question_simon)+".png")
     tree.pydot__tree_to_png(parsed_tree, out_file)
 
 except Exception as e:
