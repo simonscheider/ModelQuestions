@@ -118,6 +118,7 @@ testquestions=[
 ]
 #These are the questions used in the paper:
 questions =[
+
 'What is the quantified amount of time to ambulance station with minimal quantified amount of time from each building in "Rotterdam" at present?',
 
 'What is the temperature for each location in "Utrecht" now given that the temperature for each sensor location is such and such now?',
