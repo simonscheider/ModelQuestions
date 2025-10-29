@@ -31,10 +31,10 @@ spatialExperimentGrammar = r'''
     magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" 
-    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest")    
+    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest")    
     extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")? 
     object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
-    stuff :  "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
+    stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
@@ -100,7 +100,9 @@ experiments = [
 'location for each windmill of windfarm',
 'space of each municipality',
 'time before this earthquake',
-'amount of trees in "Utrecht"'
+'amount of trees in "Utrecht"',
+'averaged amount of (magnitude of earthquakes) in "Amsterdam"',
+ 'largest amount of money of each municipality'
 ]
 
 parsetrees(l_spEx,experiments)
