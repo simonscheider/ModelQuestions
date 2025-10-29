@@ -15,20 +15,20 @@ footer= r'''
 '''
 spatialExperimentGrammar = r'''    
     spexperiment: (measure)+ (control)* (fix)* 
-    measure : concept | amount | quantity        
-    fix : ("for" | "from" | "to" | "of" | "between") nominator | spr nominator | tr "this" (time|event) | compr value | value | "with" optimal quantity
-    control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")?)              
+    measure : concept | amount            
+    control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")?)     
+    fix : ("for" | "from" | "to" | "of" | "between") nominator | spr nominator | tr "this" (time|event) | compr value | value | "with" optimal magnitude         
     amount : ("amount of" | "interval of")? ("(")? spexperiment (")")?     
-    nominator : "this" (concept | quantity) | value | STRING
+    nominator : "this" (concept | amount ) | value | STRING    
     concept : onec | twoc
-    onec : object ("s")? | event ("s")? | stuff | space | time | quantity
+    onec : object ("s")? | event ("s")? | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
     time : "time" | "travel time" | "year" | "month"
     space : "space" | "location" | "height" | STRING
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "at" | STRING
     tr : "before" | "after" | "during"
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
-    quantity : (quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
+    magnitude : (quantified amount | aggregated amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" 
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest") 
