@@ -18,13 +18,14 @@ spatialExperimentGrammar = r'''
     measure : nominator | concept | amount            
     control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
     fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr "this" (time|event) | compr value | value | "with" optimal magnitude         
-    amount : (("amount of" | "interval of")? ("(" spexperiment ")" | concept) ("s")?)  | "sum of" ("the")? amount  
+    amount : (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "interval of" (magnitude | time) | timeinterval | "sum of" ("the")? amount  
     nominator : ("this"|"that") (concept | amount) | optimal amount | value | STRING    
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
     concept : onec | twoc
     onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
-    time : "time" | "travel time" | "year" | "month"
+    time : "time" 
+    timeinterval : "travel time" | "year" | "month" | "day" | "hour" | "minute" | "second"
     space : "space" | "location" |  STRING
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING
     tr : "before" | "after" | "during"
