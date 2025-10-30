@@ -16,22 +16,22 @@ footer= r'''
 spatialExperimentGrammar = r'''    
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount            
-    control : (("for" | "from" | "to" | "of" | "between") ("each"|"some")? ("(")? spexperiment (")")? ("s")?)     
-    fix : ("for" | "from" | "to" | "of" | "between") nominator | spr nominator | tr "this" (time|event) | compr value | value | "with" optimal magnitude         
-    amount : (("amount of" | "interval of")? ("(")? spexperiment (")")? ("s")?)  | "sum of" ("the")? amount  
-    nominator : ("this") (concept | amount) | optimal amount | value | STRING    
+    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
+    fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr "this" (time|event) | compr value | value | "with" optimal magnitude         
+    amount : (("amount of" | "interval of")? ("(" spexperiment ")" | concept) ("s")?)  | "sum of" ("the")? amount  
+    nominator : ("this"|"that") (concept | amount) | optimal amount | value | STRING    
+    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
     concept : onec | twoc
     onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
     time : "time" | "travel time" | "year" | "month"
-    space : "space" | "location" | "height" | STRING
-    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "at" | STRING
+    space : "space" | "location" |  STRING
+    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING
     tr : "before" | "after" | "during"
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
-    magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance") ("in" unit)? 
+    magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
     quantified : intensive | extensive
-    intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" 
-    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest")    
+    intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
     extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")? 
     object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
@@ -88,21 +88,21 @@ l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', keep_all_tokens=True)
 
 experiments = [
-'proportional amount of space of green for each neighborhood in "Amsterdam"',
-'quantified amount of space of green for each neighborhood in "Amsterdam"',
+'proportional amount of (space of green) for each neighborhood in "Amsterdam"',
+'quantified amount of (space of green) for each neighborhood in "Amsterdam"',
 'averaged amount of (space of building) for each neighborhood in "Amsterdam"',
-'averaged amount of quantified amount of height of building for each neighborhood in "Amsterdam"',
+'averaged amount of (quantified amount of height of building) for each neighborhood in "Amsterdam"',
 'averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"',
-'proportional amount of space of green west of "Ij" for each neighborhood in "Amsterdam"',
-'quantified amount of building of height larger than 5 meters for each neighborhood in "Amsterdam"',
-'quantified amount of time to hospital with minimal quantified amount of time from each building in "Rotterdam"',
+'proportional amount of (space of green west of "Ij") for each neighborhood in "Amsterdam"',
+'quantified amount of (building of height larger than 5 meters) for each neighborhood in "Amsterdam"',
+'quantified amount of (time to hospital with minimal quantified amount of time) from each building in "Rotterdam"',
 'sum of amount of (energy for each windmill) for windfarm',
-'location for each windmill of windfarm',
+'location for each windmill of this windfarm',
 'space of each municipality',
 'time before this earthquake',
 'amount of trees in "Utrecht"',
-'averaged amount of (magnitude of earthquakes) in "Amsterdam"',
- 'largest amount of money of each municipality'
+'averaged amount of (magnitude of earthquake) in "Amsterdam"',
+ 'largest amount of (money) of each municipality'
 ]
 
 parsetrees(l_spEx,experiments)
@@ -122,31 +122,30 @@ testquestions=[
 ]
 #These are the questions used in the paper:
 questions =[
-'What is the quantified amount of time to ambulance station with minimal quantified amount of time from each building in "Rotterdam" at present?',
-
-'What is the temperature for each location in "Utrecht" now given that the temperature for each sensor location is such and such now?',
+'What is the shortest (time to ambulance station from each building) in "Rotterdam" at present?',
+'What is the temperature for each location in "Utrecht" now given that the temperature for each (location of sensor) is such and such now?',
 'What will be the temperature in "Utrecht" tomorrow given that the temperature in "Utrecht" is 5 C today?',
 'What could have been the event in "Utrecht" yesterday causing the proportional amount of water for soil in "Utrecht" being 0.3 today?',
 'What would be the temperature in "Utrecht" in 20 years if the proportional amount of CO2 emissions of the world’s economy were halved today?',
 'What should be the amount of green in "Utrecht" today so that the maximal temperature for each location in "Utrecht" will be below 30 C this summer?',
 
 'What is the closest ambulance station for each building in "Rotterdam" at present given that the location of each ambulance station is such and such now?',
-'What will be the time from the closest ambulance station to each building in "Rotterdam" from now on given that the location of each ambulance station is such and such now?',
+'What will be the time to each building from the closest ambulance station in "Rotterdam" from now on given that the location of each ambulance station is such and such now?',
 'What will be the sum of the amount of rain for each location in "Dortmund" tomorrow given that the air pressure temperature for each location in "Germany" is such and such now?',
-#'What could have been the event for each road intersection pair in "Rotterdam" last week causing the travel time of this ambulance station to this road accident in "Rotterdam" to be 30 minutes now?',
-'What could have been the route for each language group in "the Amazon" starting 15.000 years ago causing the location of language groups to be such and such at present?',
-'What would be the travel time from the closest ambulance station to each building in "Rotterdam" in the future if the travel time between this road intersection pair was infinite minutes from now on?',
-'What would be the sum of the production of ethanol for each producer in "Brazil" in 2030 if the proportional amount of tax for ethanol for each consumer in "Brazil" was equal to 1.23 R/l from now on',
+'What could have been the event for each road intersection pair in "Rotterdam" last week causing the travel time of this ambulance station to this road accident in "Rotterdam" to be 30 minutes now?',
+'What could have been the route for each language group in "the Amazon" starting 15.000 years ago causing the location of each language group to be such and such at present?',
+'What would be the travel time to each building from the closest ambulance station in "Rotterdam" in the future if the travel time between this road intersection pair was infinite minutes from now on?',
+'What would be the sum of the production of ethanol for each producer in "Brazil" in 2030 if the proportional amount of (tax for ethanol) for each consumer in "Brazil" was equal to 1.23 R/l from now on',
 'What should be the location of ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
-'What should be the location for each windmill of this windfarm now so that the sum of the amount of energy for each windmill of this windfarm will be maximal in the future?'
+'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
 parsetrees(l_questions,questions)
 
 questions_caspar=[
 'What is the averaged proportion of NO2 for each location of some sensor for each year in "Amsterdam" now?',
-'What is the amount of space for each (interval of quantified amount of noise in decibel) in "Amsterdam" now?',
+'What is the amount of space for each (interval of quantified noise in decibel) in "Amsterdam" now?',
 'What is the location magnitude time duration of each earthquake in "Amsterdam" until now?',
-'What is the location of each tree in "Amsterdam" now?'
+'What is the location height of each tree in "Amsterdam" now?'
 ]
 
 
