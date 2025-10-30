@@ -17,18 +17,21 @@ spatialExperimentGrammar = r'''
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount            
     control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
-    fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr temporalnominator | compr value | value | "with" optimal amount         
+    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr value | value | "with" optimal amount         
     amount : "interval of" magnitude | timeinterval | region | (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "sum of" ("the")? amount  
     nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
-    temporalnominator :  "this" (time|event) | "Christmas" 
+    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference
+    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
+    pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
+    futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
     spatialnominator :  "this" (space | region)     
     concept : onec | twoc
     onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
     time : "time" 
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
-    tr : "before" | "after" | "during" | "at"
+    tr : "before" | "after" | "during" | "at" | "in"
     space : "space" | "location" |  STRING
     region : "region" | "amount of" space | "area" 
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING    
@@ -57,9 +60,6 @@ questionGrammar =  spatialExperimentGrammar + r'''
     retrodiction : "What" "could have been" ("the")? spexperiment pastreference ("given that" | "causing") ("the")? factualcondition 
     projection : "What" "would be" ("the")? spexperiment futurereference ("if"|"when") ("the")? counterfactualcondition 
     retrojection : "What" "should" ("have")? ("be"|"been") ("the")? spexperiment contemporaryreference ("so"|"such") "that" ("the")? projectedcondition
-    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
-    pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
-    futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
     '''
 
 
@@ -106,7 +106,8 @@ experiments = [
 'time before this earthquake',
 'amount of trees in "Utrecht"',
 'averaged amount of (magnitude of earthquake) in "Amsterdam"',
- 'largest amount of (money) of each municipality'
+'largest amount of money of each municipality',
+'tomorrow for each day in this year'
 ]
 
 parsetrees(l_spEx,experiments)
