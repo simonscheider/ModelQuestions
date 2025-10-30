@@ -17,23 +17,26 @@ spatialExperimentGrammar = r'''
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount            
     control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
-    fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr "this" (time|event) | compr value | value | "with" optimal magnitude         
-    amount : (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "interval of" (magnitude | time) | timeinterval | "sum of" ("the")? amount  
-    nominator : ("this"|"that") (concept | amount) | optimal amount | value | STRING    
+    fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr temporalnominator | compr value | value | "with" optimal magnitude         
+    amount : "interval of" magnitude | timeinterval | region | (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "sum of" ("the")? amount  
+    nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
+    temporalnominator :  "this" (time|event) | "Christmas" 
+    spatialnominator :  "this" (space | region) 
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
     concept : onec | twoc
     onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
     time : "time" 
-    timeinterval : "travel time" | "year" | "month" | "day" | "hour" | "minute" | "second"
+    timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
+    tr : "before" | "after" | "during" | "at"
     space : "space" | "location" |  STRING
-    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING
-    tr : "before" | "after" | "during"
+    region : "region" | "amount of" space | "area" 
+    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING    
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
     magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
-    extensive : "quantified" | "capacity of" ("the")? | "production of" ("the")? 
+    extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? 
     object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
@@ -95,7 +98,7 @@ experiments = [
 'averaged amount of (quantified amount of height of building) for each neighborhood in "Amsterdam"',
 'averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"',
 'proportional amount of (space of green west of "Ij") for each neighborhood in "Amsterdam"',
-'quantified amount of (building of height larger than 5 meters) for each neighborhood in "Amsterdam"',
+'number of (building of height larger than 5 meters) for each neighborhood in "Amsterdam"',
 'quantified amount of (time to hospital with minimal quantified amount of time) from each building in "Rotterdam"',
 'sum of amount of (energy for each windmill) for windfarm',
 'location for each windmill of this windfarm',
