@@ -17,12 +17,12 @@ spatialExperimentGrammar = r'''
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount            
     control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
-    fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr temporalnominator | compr value | value | "with" optimal magnitude         
+    fix : ("for" | "from" | "to" | "of" |  spr) nominator |  nominator | tr temporalnominator | compr value | value | "with" optimal amount         
     amount : "interval of" magnitude | timeinterval | region | (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "sum of" ("the")? amount  
     nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
-    temporalnominator :  "this" (time|event) | "Christmas" 
-    spatialnominator :  "this" (space | region) 
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
+    temporalnominator :  "this" (time|event) | "Christmas" 
+    spatialnominator :  "this" (space | region)     
     concept : onec | twoc
     onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
