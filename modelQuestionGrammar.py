@@ -37,11 +37,11 @@ conceptGrammar = '''
 nominatorGrammar = conceptGrammar + '''
     nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
-    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference
+    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | STRING
     contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
-    spatialnominator :  "this" (space | region)
+    spatialnominator :  "this" (space | region) | STRING
     value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
     relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
@@ -97,11 +97,11 @@ l_spEx = Lark(spatialExperimentGrammar + footer
 
 experiments = [
 'proportional amount of (space of green) for each neighborhood in "Amsterdam"',
-'quantified amount of (space of green) for each neighborhood in "Amsterdam"',
+'quantified amount of (space of green) in kilometers for each neighborhood in "Amsterdam"',
 'averaged amount of (space of building) for each neighborhood in "Amsterdam"',
 'averaged amount of (quantified amount of height of building) for each neighborhood in "Amsterdam"',
 'averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"',
-'proportional amount of (space of green west of "Ij") for each neighborhood in "Amsterdam"',
+'proportional amount of (space of green north of "Ij") for each neighborhood in "Amsterdam"',
 'number of (building of height larger than 5 meters) for each neighborhood in "Amsterdam"',
 'quantified amount of (time to hospital with minimal quantified amount of time) from each building in "Rotterdam"',
 'sum of amount of (energy for each windmill) for windfarm',
@@ -151,10 +151,11 @@ questions =[
 parsetrees(l_questions,questions)
 
 questions_caspar=[
-'What is the averaged proportion of NO2 for each location of some sensor for each year in "Amsterdam" now?',
+'What is the averaged (quantified amount of NO2 for each (location of some sensor)) for each year in "Amsterdam" now?',
 'What is the amount of space for each (interval of quantified noise in decibel) in "Amsterdam" now?',
-'What is the location magnitude time duration of each earthquake in "Amsterdam" until now?',
-'What is the location height of each tree in "Amsterdam" now?'
+'What is the location magnitude interval of time duration of each earthquake in "Amsterdam" until now?',
+'What is the location height of each tree in "Amsterdam" now?',
+'What is the amount of space for each (interval of quantified amount of cost) for each year after "2002" in "Amsterdam" now?'
 ]
 
 
