@@ -13,19 +13,9 @@ footer= r'''
         %import common.WS 
         %ignore WS
 '''
-spatialExperimentGrammar = r'''    
-    spexperiment: (measure)+ (control)* (fix)* 
-    measure : nominator | concept | amount            
-    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
-    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr value | value | "with" optimal amount         
+
+conceptGrammar = '''
     amount : "interval of" magnitude | timeinterval | region | (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "sum of" ("the")? amount  
-    nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
-    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
-    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference
-    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
-    pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
-    futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
-    spatialnominator :  "this" (space | region)     
     concept : onec | twoc
     onec : object  | event | stuff | space | time | magnitude
     twoc : onec "pair" | "pair of" onec
@@ -43,11 +33,25 @@ spatialExperimentGrammar = r'''
     object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
+'''
+nominatorGrammar = conceptGrammar + '''
+    nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
+    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
+    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference
+    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
+    pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
+    futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
+    spatialnominator :  "this" (space | region)
     value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
     relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
-    '''
-
+'''
+spatialExperimentGrammar = nominatorGrammar + r'''    
+    spexperiment: (measure)+ (control)* (fix)* 
+    measure : nominator | concept | amount            
+    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
+    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr value | value | "with" optimal amount  
+'''
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
     factualcondition : spexperiment ("is"|"are"|"was"|"were"|"to be"|"being") ("such and such"| optimal | fix)  contemporaryreference 
