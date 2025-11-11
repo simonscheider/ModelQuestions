@@ -116,6 +116,7 @@ testquestions=[
 'What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building was such and such now?',
 'What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant will be such and such in the future?',
 ]
+
 #These are the questions used in the paper:
 questions =[
 
@@ -141,6 +142,26 @@ questions =[
 
 parsetrees(l_questions,questions)
 
+<<<<<<< Updated upstream
+=======
+questions_caspar=[
+'What is the averaged (quantified amount of NO2 for each (location of some sensor)) for each year in "Amsterdam" now?',
+'What is the amount of space for each (interval of quantified noise in decibel) in "Amsterdam" now?',
+'What is the location magnitude interval of time duration of each earthquake in "Amsterdam" until now?',
+'What is the location height of each tree in "Amsterdam" now?',
+'What is the amount of space for each (interval of quantified amount of cost) for each year after "2002" in "Amsterdam" now?'
+]
+
+parsetrees(l_questions,questions_caspar)
+
+questions_roelof=[
+
+
+
+
+]
+
+>>>>>>> Stashed changes
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
