@@ -29,35 +29,68 @@ conceptGrammar = '''
     magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
-    extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? 
-    object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
+    extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? | "duration of"
+    object : person | "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
+    person : "person"
     stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
+    occurrence : process | state | act
+    act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake"
+    process : "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
+    state : "stay" | "linger" | "rest" | "contain"
+    
 '''
 nominatorGrammar = conceptGrammar + '''
-    nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
-    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
-    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | STRING
-    contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
+    indicator : "this" | "that" | "some"
+    nominator : temporalnominator | spatialnominator | objectnominator | indicator (concept | amount) | optimal amount | value | STRING  
+    optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest" | "first" | "last" | "final")  
+    temporalnominator :  indicator (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | STRING    
+    personnominator : "I" | "you" | "he" | "she" | STRING | indicator person
+    objectnominator : "home" | STRING | indicator object | personnominator
+    contemporaryreference : ("starting")? ("now" | "then" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
-    spatialnominator :  "this" (space | region) | STRING
+    spatialnominator :  indicator (space | region) | STRING
     value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
     relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
+    nomlist : nomlist nominator | nominator
+    
 '''
-spatialExperimentGrammar = nominatorGrammar + r'''    
-    spexperiment: (measure)+ (control)* (fix)* 
+situationGrammar = nominatorGrammar +'''
+    situation : (personnominator)? action | (nominator)? happening 
+    do : "do"("es")?
+    kappa : "is" | "are"
+    preposition : "at" | "in" | "on" |"to"
+    epsilon : "is"
+    attribution : nominator epsilon object
+    appredicator : (outcome)?  (means)?  (preposition nominator)?    
+    outcome : nomlist
+    means : "with" nomlist
+    performance : ("at")? (temporalnominator)? do |  time (personnominator) do 
+    action : performance  act ("ing")? (appredicator)? | actionwithgoal
+    generativegoal : "such that" (attribution)
+    modificativegoal :  "such that" (situation)
+    goal : generativegoal | modificativegoal
+    generativeaction : performance   (act ("ing")?)? (appredicator)? generativegoal
+    modificativeaction : performance   (act ("ing")?)? (appredicator)? modificativegoal 
+    actionwithgoal : generativeaction |  modificativeaction
+    happening : ("at")? temporalnominator kappa (state|process) ("ing")? (appredicator)? | time (nominator) kappa (state|process) ("ing")?    
+'''
+spatialExperimentGrammar = situationGrammar + r'''    
+    spexperiment: processexperiment | (measure)+ (control)* (fix)* 
     measure : nominator | concept | amount            
-    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
-    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr value | value | "with" optimal amount  
+    control : temporalcontrol | ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount | situation)
+    temporalcontrol : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? time       
+    fix : tr temporalnominator | spr spatialnominator | "if" situation | ("for" | "from" | "to" | "of" | spr) nominator | compr value | value | "with" optimal amount     
+    processexperiment : (measure)+ temporalcontrol (fix)*
 '''
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
     factualcondition : spexperiment ("is"|"are"|"was"|"were"|"to be"|"being") ("such and such"| optimal | fix)  contemporaryreference 
     counterfactualcondition : spexperiment ("was"|"were") ("such and such"| optimal | fix) contemporaryreference 
     projectedcondition : spexperiment ("will be"|"being") ("such and such"| optimal | fix) futurereference 
-    simplemodel : spexperiment contemporaryreference
+    simplemodel : spexperiment (contemporaryreference)?
     transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
     contemporary : "What" ("is"|"are") ("the")? (simplemodel|transformationmodel) 
     prediction : "What" "will be" ("the")? spexperiment futurereference "given that" ("the")?  factualcondition 
@@ -92,6 +125,14 @@ def parsetrees(parser, questions):
                 #make_png("ModelQuestions/parseTrees/"+str(get_variable_name(questions))+str(cnt) + ".png", parser, e)
                 #make_dot("ModelQuestions/parseTrees/"+str(get_variable_name(questions)) + str(cnt) + ".gv", parser, e)
 
+l_sit = Lark(spatialExperimentGrammar + footer
+        ,parser='earley', start='situation', keep_all_tokens=True)
+situations = ['he now does run',
+                'time she is growing'
+              ]
+
+parsetrees(l_sit ,situations)
+
 l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', keep_all_tokens=True)
 
@@ -111,7 +152,10 @@ experiments = [
 'amount of trees in "Utrecht"',
 'averaged amount of (magnitude of earthquake) in "Amsterdam"',
 'largest amount of money of each municipality',
-'tomorrow for each day in this year'
+'tomorrow for each day in this year',
+'amount of time if he now does run home',
+'(location for each time) if he now does run home',
+'amount of trees if he then is perceiveing'
 ]
 
 parsetrees(l_spEx,experiments)
@@ -149,7 +193,7 @@ questions =[
 'What should be the location of ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
 'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
-parsetrees(l_questions,questions)
+#parsetrees(l_questions,questions)
 
 questions_caspar=[
 'What is the averaged (quantified amount of NO2 for each (location of some sensor)) for each year in "Amsterdam" now?',
@@ -159,17 +203,18 @@ questions_caspar=[
 'What is the amount of space for each (interval of quantified amount of cost) for each year after "2002" in "Amsterdam" now?'
 ]
 
-parsetrees(l_questions,questions_caspar)
+#parsetrees(l_questions,questions_caspar)
 
 questions_roelof=[
-
-
-
-
-
-
+    #Process questions
+'What is the final (location for each time) if he then does run home?',
+'What is the amount of trees for each time he does run home?',
+'What is the amount of trees for each trip?',
+'What is the duration of (interval of time if he now does cycle home)?',
+'What is the duration of time he does cycle home?',
+'What is the duration of (amount of time if he does run home)?'
 ]
-
+parsetrees(l_questions,questions_roelof)
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
