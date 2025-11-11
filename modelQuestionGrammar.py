@@ -28,14 +28,14 @@ conceptGrammar = '''
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
     magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
     quantified : intensive | extensive
-    intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
+    intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" | "concentration of"      
     extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? | "duration of"
-    object : person | "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
+    object : person | "book" | "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     person : "person"
     stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     occurrence : process | state | act
-    act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake"
+    act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan"
     process : "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
     state : "stay" | "linger" | "rest" | "contain"
     
@@ -67,7 +67,7 @@ situationGrammar = nominatorGrammar +'''
     appredicator : (outcome)?  (means)?  (preposition nominator)?    
     outcome : nomlist
     means : "with" nomlist
-    performance : ("at")? (temporalnominator)? do |  time (personnominator) do 
+    performance : ("at")? (temporalnominator)? do |  time (personnominator) do  | person temporalnominator do
     action : performance  act ("ing")? (appredicator)? | actionwithgoal
     generativegoal : "such that" (attribution)
     modificativegoal :  "such that" (situation)
@@ -75,7 +75,7 @@ situationGrammar = nominatorGrammar +'''
     generativeaction : performance   (act ("ing")?)? (appredicator)? generativegoal
     modificativeaction : performance   (act ("ing")?)? (appredicator)? modificativegoal 
     actionwithgoal : generativeaction |  modificativeaction
-    happening : ("at")? temporalnominator kappa (state|process) ("ing")? (appredicator)? | time (nominator) kappa (state|process) ("ing")?    
+    happening : ("at")? temporalnominator kappa (state|process) ("ing")? (appredicator)? | time (nominator) kappa (state|process) ("ing")?  |  nominator temporalnominator kappa (state|process) ("ing")? 
 '''
 spatialExperimentGrammar = situationGrammar + r'''    
     spexperiment: processexperiment | (measure)+ (control)* (fix)* 
@@ -128,7 +128,9 @@ def parsetrees(parser, questions):
 l_sit = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='situation', keep_all_tokens=True)
 situations = ['he now does run',
-                'time she is growing'
+                'time she is growing',
+              'he now does read this book',
+              'he now does plan such that he then is staying home'
               ]
 
 parsetrees(l_sit ,situations)
@@ -206,15 +208,25 @@ questions_caspar=[
 #parsetrees(l_questions,questions_caspar)
 
 questions_roelof=[
-    #Process questions
+#Process questions
 'What is the final (location for each time) if he then does run home?',
 'What is the amount of trees for each time he does run home?',
 'What is the amount of trees for each trip?',
 'What is the duration of (interval of time if he now does cycle home)?',
 'What is the duration of time he does cycle home?',
-'What is the duration of (amount of time if he does run home)?'
+'What is the duration of (amount of time if he now does run home)?'
 ]
-parsetrees(l_questions,questions_roelof)
+#parsetrees(l_questions,questions_roelof)
+
+questions_activity_ambient_air_pollution =[
+    'What is the concentration of NO2 for each location for each time?', #measuring air pollution field
+    'What is the (location for each time of this person) for each person now does go home?', #simulating trips
+    #'What is the trip ', #Trip generation using plans
+    'What is the amount of NO2 for each time for each person?', #Instantaneous exposure
+    'What is the sum of the amount of NO2 for each person for this interval of time?' #Accumulated exposure
+]
+parsetrees(l_questions,questions_activity_ambient_air_pollution)
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
