@@ -1,4 +1,4 @@
-# Python script to parse spatio-temporal modeling questions using a grammar of spatio-temporal experiments
+ # Python script to parse spatio-temporal modeling questions using a grammar of spatio-temporal experiments
 
 
 from lark import Lark, tree
@@ -24,15 +24,15 @@ conceptGrammar = '''
     tr : "before" | "after" | "during" | "at" | "in"
     space : "space" | "location" |  STRING
     region : "region" | "amount of" space | "area" 
-    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING    
+    spr : "in" | "within" | "touching" | "overlapping" | "not overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING    
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
     magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" | "concentration of"      
     extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? | "duration of"
-    object : person | "book" | "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
+    object : person | "book" | "tree"| "lifestock" | "street segment" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     person : "person"
-    stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
+    stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score"| "NO2" | STRING 
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     occurrence : process | state | act
     act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan"
@@ -46,7 +46,7 @@ nominatorGrammar = conceptGrammar + '''
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest" | "first" | "last" | "final")  
     temporalnominator :  indicator (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | STRING    
     personnominator : "I" | "you" | "he" | "she" | STRING | indicator person
-    objectnominator : "home" | STRING | indicator object | personnominator
+    objectnominator : "home" | STRING | indicator object | personnominator | "destination"
     contemporaryreference : ("starting")? ("now" | "then" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
@@ -133,7 +133,7 @@ situations = ['he now does run',
               'he now does plan such that he then is staying home'
               ]
 
-parsetrees(l_sit ,situations)
+# parsetrees(l_sit ,situations)
 
 l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', keep_all_tokens=True)
@@ -160,7 +160,7 @@ experiments = [
 'amount of trees if he then is perceiveing'
 ]
 
-parsetrees(l_spEx,experiments)
+# parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
@@ -216,17 +216,55 @@ questions_roelof=[
 'What is the duration of time he does cycle home?',
 'What is the duration of (amount of time if he now does run home)?'
 ]
-#parsetrees(l_questions,questions_roelof)
+# parsetrees(l_questions,questions_roelof)
 
 questions_activity_ambient_air_pollution =[
-    'What is the concentration of NO2 for each location for each time?', #measuring air pollution field
-    'What is the (location for each time of this person) for each person now does go home?', #simulating trips
-    #'What is the trip ', #Trip generation using plans
-    'What is the amount of NO2 for each time for each person?', #Instantaneous exposure
+    'What is the (location for each time of this person) for each person now does go home?', # Trip location  NO2  simulating trips
+    #'What is the trip ', #Trip generation using plans  # Trip gen
+    'What is the amount of NO2 for each time for each person?', # NO2 sample #Instantaneous exposure
+    'What is the concentration of NO2 for each location for each time?', # NO2 Field  #measuring air pollution field
     'What is the sum of the amount of NO2 for each person for this interval of time?' #Accumulated exposure
 ]
-parsetrees(l_questions,questions_activity_ambient_air_pollution)
 
+# parsetrees(l_questions,questions_activity_ambient_air_pollution)
 
+questions_activity_shortest_path =[
+    "What is the averaged (amount of distance for each person for the shortest route)",
+
+    "What is the number of persons for each street segment for this interval of time", # amount of distance
+
+    "What is the street segment for each time  for each person?", # amount of distance
+
+    "What is the shortest route for each person from destination to home",
+
+    "What is the amount of recreational value for each location for each person within 1400 meters",
+
+    # "Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
+
+    "What is the shortest route for each person from home to destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
+]
+parsetrees(l_questions,questions_activity_shortest_path)
+
+##### Weighted strategy
+
+questions_activity_weighted_path =[
+    "What is the averaged (amount of distance for the shortest route for this person)for each person for this interval of time?",
+
+    "What is the number of persons for each location for this interval of time", # amount of distance
+
+    "What is the (location for each time of this person) for each person?", # amount of distance
+
+    "What is the  route for each person from destination to home",
+
+    "What is the route for each person from home to destination with the minimum weighted score",
+
+    "What is the weighted score for each road segment",
+    
+    "What is the amount of recreational value for each location for each person within 1400 meters",
+    # "Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
+    "What is the shortest route for each person from home to destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
+]
+# parsetrees(l_questions,questions_activity_weighted_path)
+#    "What is the (amount of distance of the shortest route for this person) for each person",
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
 
