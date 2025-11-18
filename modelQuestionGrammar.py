@@ -57,8 +57,8 @@ nominatorGrammar = conceptGrammar + '''
     nomlist : nomlist nominator | nominator
     
 '''
-situationGrammar = nominatorGrammar +'''
-    situation : (personnominator)? action | (nominator)? happening | "(" factualcondition ")" 
+situationGrammar = nominatorGrammar + '''
+    situation : (personnominator)? action | (nominator)? happening
     do : "do"("es")?
     kappa : "is" | "are"
     preposition : "at" | "in" | "on" |"to"
@@ -84,6 +84,7 @@ spatialExperimentGrammar = situationGrammar + r'''
     temporalcontrol : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? time       
     fix : tr temporalnominator | spr spatialnominator | "if" situation | ("for" | "from" | "to" | "of" | spr) nominator | compr value | value | "with" optimal amount     
     processexperiment : (measure)+ temporalcontrol (fix)*
+    
 '''
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
@@ -158,7 +159,7 @@ experiments = [
 'amount of time if he now does run home',
 '(location for each time) if he now does run home',
 'amount of trees if he then is perceiveing',
-'he does such that (amount of time for this trip) is such and such'
+'he does such that he then is at home'
 ]
 
 # parsetrees(l_spEx,experiments)
