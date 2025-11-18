@@ -35,7 +35,7 @@ conceptGrammar = '''
     stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score"| "NO2" | STRING 
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     occurrence : process | state | act
-    act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan"
+    act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan" | "eat"
     process : "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
     state : "stay" | "linger" | "rest" | "contain"
     
@@ -216,9 +216,10 @@ questions_roelof=[
 'What is the amount of trees for each trip?',
 'What is the duration of (interval of time if he now does cycle home)?',
 'What is the duration of time he does cycle home?',
-'What is the duration of (amount of time if he now does run home)?'
+'What is the duration of (amount of time if he now does run home)?',
+'What is the amount of time for each (place if he now does cycle such that he then is staying at this place)?'
 ]
-# parsetrees(l_questions,questions_roelof)
+parsetrees(l_questions,questions_roelof)
 
 questions_activity_ambient_air_pollution =[
     'What is the (location for each time of this person) for each person now does go home?', # Trip location  NO2  simulating trips
@@ -241,7 +242,7 @@ questions_activity_shortest_path =[
 
     "What is the amount of recreational value for each location for each person within 1400 meters",
 
-    "What is the (location if this person at this time does such that this person then is staying at this location) for each person at this time",# Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
+    "What is the (place if this person at this time does such that this person then does eat at this place) for each person at this time?",# Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
     #What is the (nominator if this person at this time does such that (situation with nominator)) for each person at this time
 
     "What is the shortest route for each person from home to destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
@@ -251,7 +252,7 @@ parsetrees(l_questions,questions_activity_shortest_path)
 ##### Weighted strategy
 
 questions_activity_weighted_path =[
-    "What is the averaged (amount of distance for the shortest route for this person)for each person for this interval of time?",
+    "What is the averaged (amount of distance for the shortest route for this person) for each person for this interval of time?",
 
     "What is the number of persons for each location for this interval of time", # amount of distance
 
