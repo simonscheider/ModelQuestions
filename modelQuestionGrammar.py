@@ -242,6 +242,7 @@ questions_activity_shortest_path =[
     "What is the amount of recreational value for each location for each person within 1400 meters",
 
     "What is the (location if this person at this time does such that this person then is staying at this location) for each person at this time",# Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
+    #What is the (nominator if this person at this time does such that (situation with nominator)) for each person at this time
 
     "What is the shortest route for each person from home to destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
 ]
