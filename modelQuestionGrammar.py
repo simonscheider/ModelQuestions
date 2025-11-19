@@ -17,7 +17,7 @@ footer= r'''
 conceptGrammar = '''
     amount : "interval of" magnitude | timeinterval | region | (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "sum of" ("the")? amount  
     concept : onec | twoc
-    onec : object  | event | stuff | space | time | magnitude
+    onec : object  | event | stuff | space | time | magnitude | occurrence
     twoc : onec "pair" | "pair of" onec
     time : "time" 
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
@@ -30,14 +30,14 @@ conceptGrammar = '''
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" | "concentration of"      
     extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? | "duration of"
-    object : person | "book" | "tree"| "lifestock" | "street segment" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
+    object : "object" | person | "book" | "tree"| "lifestock" | "street segment" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
     person : "person"
-    stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score"| "NO2" | STRING 
-    event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
+    stuff :  "stuff" | "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score" | "NO2" | STRING 
+    event : "event" | "trip" | "period" | "earthquake" | "road accident" | STRING
     occurrence : process | state | act
-    act : "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan" | "eat"
-    process : "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
-    state : "stay" | "linger" | "rest" | "contain"
+    act : "act" | "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan" | "eat"
+    process : "process"| "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
+    state : "state" | "stay" | "linger" | "rest" | "contain"
     
 '''
 nominatorGrammar = conceptGrammar + '''
@@ -132,7 +132,7 @@ situations = ['he now does run',
               'he now does such that he then is staying at home'
               ]
 
-parsetrees(l_sit ,situations)
+#parsetrees(l_sit ,situations)
 
 l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', keep_all_tokens=True)
@@ -152,7 +152,7 @@ experiments = [
 'time before this earthquake',
 'amount of trees in "Utrecht"',
 'averaged (magnitude of earthquake) in "Amsterdam"',
-'largest amount of money of each municipality',
+'largest (amount of money of each municipality)',
 'tomorrow for each day in this year',
 'amount of time if he now does run home',
 '(location for each time) if he now does run home',
@@ -160,7 +160,7 @@ experiments = [
 'time if she now is growing'
 ]
 
-parsetrees(l_spEx,experiments)
+#parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
@@ -175,7 +175,7 @@ testquestions=[
 'What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building was such and such now?',
 'What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant will be such and such in the future?',
 ]
-parsetrees(l_questions,testquestions)
+#parsetrees(l_questions,testquestions)
 
 #These are the questions used in the paper:
 questions =[
@@ -196,7 +196,7 @@ questions =[
 'What should be the location of ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
 'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
-parsetrees(l_questions,questions)
+#parsetrees(l_questions,questions)
 
 questions_caspar=[
 'What is the averaged (quantified amount of NO2 for each (location of some sensor)) for each year in "Amsterdam" now?',
@@ -206,7 +206,7 @@ questions_caspar=[
 'What is the amount of space for each (interval of quantified amount of cost) for each year after "2002" in "Amsterdam" now?'
 ]
 
-parsetrees(l_questions,questions_caspar)
+#parsetrees(l_questions,questions_caspar)
 
 questions_roelof=[
 #Process questions
@@ -216,7 +216,9 @@ questions_roelof=[
 'What is the duration of (interval of time if he now does cycle home)?',
 'What is the duration of time if he does cycle home?',
 'What is the duration of (amount of time if he now does run home)?',
-'What is the amount of time for each (place if he now does cycle such that he then is staying at this place)?'
+'What is the amount of time for each (place if he now does cycle such that he then is staying at this place)?',
+'What is the (place if this person now does cycle such that this person then does eat at this place) for each place for each person if this person now is staying at that place?',
+'What is the (act if this person now does act such that this person then does eat at this place) for each place for each person if this person now is staying at that place?'
 ]
 parsetrees(l_questions,questions_roelof)
 
