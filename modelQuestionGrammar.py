@@ -35,7 +35,7 @@ conceptGrammar = '''
     stuff :  "stuff" | "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score" | "NO2" | STRING 
     event : "event" | "trip" | "period" | "earthquake" | "road accident" | STRING
     occurrence : process | state | act
-    act : "act" | "make" | "measure" | "run" | "stay" | "cycle" | "throw" | "bake" | "read" | "go" | "plan" | "eat"
+    act : "act" | "make" | "measure" | "run" | "stay" | "cycle" | "bike" | "throw" | "bake" | "read" | "go" | "plan" | "eat"
     process : "process"| "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
     state : "state" | "stay" | "linger" | "rest" | "contain"
     
@@ -218,9 +218,12 @@ questions_roelof=[
 'What is the duration of (amount of time if he now does run home)?',
 'What is the amount of time for each (place if he now does cycle such that he then is staying at this place)?',
 'What is the (place if this person now does cycle such that this person then does eat at this place) for each place for each person if this person now is staying at that place?',
-'What is the (act if this person now does act such that this person then does eat at this place) for each place for each person if this person now is staying at that place?'
+'What is the (act if this person now does act such that this person then does eat at this place) for each place for each person if this person now is staying at that place?',
+'What is the duration of (location for each time) for each person if this person now does bike such that this person does eat at this place?'
 ]
 parsetrees(l_questions,questions_roelof)
+# Decision/planning experiment (measure needs to contain a decision situation where a person acts towards a goal)
+# Plan implementation experiment (the planning situation becomes a fix of a control)
 
 questions_activity_ambient_air_pollution =[
     'What is the (location for each time of this person) for each person if this person now does go home?', # Trip location  NO2  simulating trips
