@@ -75,17 +75,15 @@ situationGrammar = nominatorGrammar + '''
     generativeaction : performance   (act ("ing")?)? (appredicator)? generativegoal
     modificativeaction : performance   (act ("ing")?)? (appredicator)? modificativegoal 
     actionwithgoal : generativeaction |  modificativeaction
-    happening : ("at")? temporalnominator kappa (state|process) ("ing")? (appredicator)? | time (nominator) kappa (state|process) ("ing")?  |  nominator temporalnominator kappa (state|process) ("ing")? 
+    happening : ("at")? temporalnominator kappa (state|process) ("ing")? (appredicator)?     
 '''
+
 spatialExperimentGrammar = situationGrammar + r'''    
-    spexperiment: processexperiment | (measure)+ (control)* (fix)* 
-    measure : nominator | concept | amount | situation            
-    control : temporalcontrol | ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount | situation)
-    temporalcontrol : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? time       
+    spexperiment: (measure)+ (control)* (fix)* 
+    measure : nominator | concept | amount            
+    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)         
     fix : tr temporalnominator | spr spatialnominator | "if" situation | ("for" | "from" | "to" | "of" | spr) nominator | compr value | value | "with" optimal amount     
-    processexperiment : (measure)+ temporalcontrol (fix)*
-    
-'''
+    '''
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
     factualcondition : spexperiment ("is"|"are"|"was"|"were"|"to be"|"being") ("such and such"| optimal | fix)  contemporaryreference 
@@ -129,12 +127,12 @@ def parsetrees(parser, questions):
 l_sit = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='situation', keep_all_tokens=True)
 situations = ['he now does run',
-                'time she is growing',
               'he now does read this book',
-              'he now does plan such that he then is staying home'
+              'he now does plan such that he then is staying home',
+              'he now does such that he then is staying at home'
               ]
 
-# parsetrees(l_sit ,situations)
+parsetrees(l_sit ,situations)
 
 l_spEx = Lark(spatialExperimentGrammar + footer
         ,parser='earley', start='spexperiment', keep_all_tokens=True)
@@ -148,21 +146,21 @@ experiments = [
 'proportional amount of (space of green north of "Ij") for each neighborhood in "Amsterdam"',
 'number of (building of height larger than 5 meters) for each neighborhood in "Amsterdam"',
 'quantified amount of (time to hospital with minimal quantified amount of time) from each building in "Rotterdam"',
-'sum of amount of (energy for each windmill) for windfarm',
+'sum of amount of (energy for each windmill) for this windfarm',
 'location for each windmill of this windfarm',
 'space of each municipality',
 'time before this earthquake',
 'amount of trees in "Utrecht"',
-'averaged amount of (magnitude of earthquake) in "Amsterdam"',
+'averaged (magnitude of earthquake) in "Amsterdam"',
 'largest amount of money of each municipality',
 'tomorrow for each day in this year',
 'amount of time if he now does run home',
 '(location for each time) if he now does run home',
 'amount of trees if he then is perceiveing',
-'he does such that he then is at home'
+'time if she now is growing'
 ]
 
-# parsetrees(l_spEx,experiments)
+parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
@@ -177,6 +175,7 @@ testquestions=[
 'What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building was such and such now?',
 'What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant will be such and such in the future?',
 ]
+parsetrees(l_questions,testquestions)
 
 #These are the questions used in the paper:
 questions =[
@@ -197,7 +196,7 @@ questions =[
 'What should be the location of ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
 'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
-#parsetrees(l_questions,questions)
+parsetrees(l_questions,questions)
 
 questions_caspar=[
 'What is the averaged (quantified amount of NO2 for each (location of some sensor)) for each year in "Amsterdam" now?',
@@ -207,29 +206,29 @@ questions_caspar=[
 'What is the amount of space for each (interval of quantified amount of cost) for each year after "2002" in "Amsterdam" now?'
 ]
 
-#parsetrees(l_questions,questions_caspar)
+parsetrees(l_questions,questions_caspar)
 
 questions_roelof=[
 #Process questions
 'What is the final (location for each time) if he then does run home?',
-'What is the amount of trees for each time he does run home?',
+'What is the amount of trees for each time if he does run home?',
 'What is the amount of trees for each trip?',
 'What is the duration of (interval of time if he now does cycle home)?',
-'What is the duration of time he does cycle home?',
+'What is the duration of time if he does cycle home?',
 'What is the duration of (amount of time if he now does run home)?',
 'What is the amount of time for each (place if he now does cycle such that he then is staying at this place)?'
 ]
 parsetrees(l_questions,questions_roelof)
 
 questions_activity_ambient_air_pollution =[
-    'What is the (location for each time of this person) for each person now does go home?', # Trip location  NO2  simulating trips
+    'What is the (location for each time of this person) for each person if this person now does go home?', # Trip location  NO2  simulating trips
     #'What is the trip ', #Trip generation using plans  # Trip gen
     'What is the amount of NO2 for each time for each person?', # NO2 sample #Instantaneous exposure
     'What is the concentration of NO2 for each location for each time?', # NO2 Field  #measuring air pollution field
     'What is the sum of the amount of NO2 for each person for this interval of time?' #Accumulated exposure
 ]
 
-# parsetrees(l_questions,questions_activity_ambient_air_pollution)
+parsetrees(l_questions,questions_activity_ambient_air_pollution)
 
 questions_activity_shortest_path =[
     "What is the averaged (amount of distance for each person for the shortest route)",
