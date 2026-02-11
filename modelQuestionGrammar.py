@@ -4,6 +4,12 @@
 from lark import Lark, tree
 from rich import print
 #import pydot
+import warnings
+try:
+    import CustomLarkFunctions
+except ImportError:
+    warnings.warn('To use the show_image() function you need to install the "PIL" package.')
+
 
 #Grammars:
 footer= r'''
@@ -23,19 +29,19 @@ conceptGrammar = '''
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
     tr : "before" | "after" | "during" | "at" | "in"
     space : "space" | "location" |  STRING
-    region : "region" | "amount of" space | "area" 
+    region : "region" | "amount of" space | "area" | "Utrecht"
     spr : "in" | "within" | "touching" | "overlapping" | "not overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING    
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
     magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized" | "concentration of"      
     extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? | "duration of"
-    object : "object" | person | "book" | "tree"| "lifestock" | "street segment" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
+    object : "object" | "destination"| person | "book" | "tree"| "lifestock" | "street segment" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"| "goal" | STRING
     person : "person"
-    stuff :  "stuff" | "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score" | "NO2" | STRING 
+    stuff :  "stuff" | "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "recreational value" | "weighted score" | "NO2" | "PM" |"value"| STRING 
     event : "event" | "trip" | "period" | "earthquake" | "road accident" | STRING
     occurrence : process | state | act
-    act : "act" | "make" | "measure" | "run" | "stay" | "cycle" | "bike" | "throw" | "bake" | "read" | "go" | "plan" | "eat"
+    act : "act" | "make" | "measure" | "run" | "stay" | "cycle" | "bike" | "throw" | "bake" | "read" | "go" | "plan" | "eat" | "walk"| "arrive"
     process : "process"| "generate" | "stumble" | "rain"  | "grow" | "burn" | "flow" | "breathe" | "perceive"
     state : "state" | "stay" | "linger" | "rest" | "contain"
     
@@ -46,7 +52,7 @@ nominatorGrammar = conceptGrammar + '''
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest" | "first" | "last" | "final")  
     temporalnominator :  indicator (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | STRING    
     personnominator : "I" | "you" | "he" | "she" | STRING | indicator person
-    objectnominator : "home" | STRING | indicator object | personnominator | "destination"
+    objectnominator : "home" | STRING | indicator object | "Rotterdam" |personnominator 
     contemporaryreference : ("starting")? ("now" | "then" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
@@ -72,6 +78,7 @@ situationGrammar = nominatorGrammar + '''
     generativegoal : "such that" (attribution)
     modificativegoal :  "such that" (situation)
     goal : generativegoal | modificativegoal
+    goals: goal ((","|"or") goal)*
     generativeaction : performance   (act ("ing")?)? (appredicator)? generativegoal
     modificativeaction : performance   (act ("ing")?)? (appredicator)? modificativegoal 
     actionwithgoal : generativeaction |  modificativeaction
@@ -100,11 +107,11 @@ questionGrammar =  spatialExperimentGrammar + r'''
 
 
 def make_png(filename,parser, sentence):
-        tree.pydot__tree_to_png(parser.parse(sentence), filename)
+    tree.pydot__tree_to_png(parser.parse(sentence), filename)
 
 
 def make_dot(filename,parser, sentence):
-        tree.pydot__tree_to_dot(parser.parse(sentence), filename)
+        tree.pydot__tree_to_dot(parser.parse(sentence), filename, "TP")
 
 def get_variable_name(variable):
     for name in globals():
@@ -219,9 +226,9 @@ questions_roelof=[
 'What is the amount of time for each (place if he now does cycle such that he then is staying at this place)?',
 'What is the (place if this person now does cycle such that this person then does eat at this place) for each place for each person if this person now is staying at that place?',
 'What is the (act if this person now does act such that this person then does eat at this place) for each place for each person if this person now is staying at that place?',
-'What is the duration of (location for each time) for each person if this person now does bike such that this person does eat at this place?'
+'What is the   of (location for each time) for each person if this person now does bike such that this person does eat at this place?'
 ]
-parsetrees(l_questions,questions_roelof)
+# parsetrees(l_questions,questions_roelof)
 # Decision/planning experiment (measure needs to contain a decision situation where a person acts towards a goal)
 # Plan implementation experiment (the planning situation becomes a fix of a control)
 
@@ -233,46 +240,62 @@ questions_activity_ambient_air_pollution =[
     'What is the sum of the amount of NO2 for each person for this interval of time?' #Accumulated exposure
 ]
 
-parsetrees(l_questions,questions_activity_ambient_air_pollution)
+# parsetrees(l_questions,questions_activity_ambient_air_pollution)
 
 questions_activity_shortest_path =[
     "What is the averaged (amount of distance for each person for the shortest route)",
-
     "What is the number of persons for each street segment for this interval of time", # amount of distance
-
     "What is the street segment for each time  for each person?", # amount of distance
-
     "What is the shortest route for each person from destination to home",
-
     "What is the amount of recreational value for each location for each person within 1400 meters",
-
-    "What is the (place if this person at this time does such that this person then does eat at this place) for each person at this time?",# Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
+    'What is the (destination if this person now does walk such that this person then does arrive at this destination) for each place for each person if this person now is staying at that place?',
+    'What is the (walk if this person now does walk such that this person then does eat at this place) for each place for each person if this person now is staying at that place?',
+    #"What is the (place if this person at this time does such that this person then does eat at this place) for each person at this time?",# Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
     #What is the (nominator if this person at this time does such that (situation with nominator)) for each person at this time
-
-    "What is the shortest route for each person from home to destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
+    "What is the shortest route for each person from home to this destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
 ]
-parsetrees(l_questions,questions_activity_shortest_path)
+# parsetrees(l_questions,questions_activity_shortest_path)
 
 ##### Weighted strategy
 
 questions_activity_weighted_path =[
     "What is the averaged (amount of distance for the shortest route for this person) for each person for this interval of time?",
-
     "What is the number of persons for each location for this interval of time", # amount of distance
-
     "What is the (location for each time of this person) for each person?", # amount of distance
-
     "What is the  route for each person from destination to home",
-
     "What is the route for each person from home to destination with the minimum weighted score",
-
     "What is the weighted score for each road segment",
-    
     "What is the amount of recreational value for each location for each person within 1400 meters",
     # "Select random outward destination for each person"                                   # Random destination selector is not an experiment since we do not measure anything
     "What is the shortest route for each person from home to destination not overlapping this route", # This route sounds wrong would like somethilike not similair to outward route
+
+
 ]
 # parsetrees(l_questions,questions_activity_weighted_path)
 #    "What is the (amount of distance of the shortest route for this person) for each person",
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+questions_tryout = [
+    # 'What is that this person such that at this time is having diner for each person at this time'
+    # "at this time is staying home or at this time is staying home",
+    # "What is the maximum  value for each goal for each person at this time",
+    'What is the amount of PM for each time for each person in this interval of time in Rotterdam',
+    'What is the averaged amount of PM for each person for this interval of time in Rotterdam',
+    'What is the goal for each person at this time?',
+    'What is the  route for each person from destination to home',
+    'What is the averaged amount of PM for each person for this interval of time',
+    'What is the sum of the amount of PM for each person for this interval of time in this Utrecht?',
+    'What is the concentration of PM10 for each location for each time in this Utrecht?',
+]
+# parsetrees(l_questions,questions_tryout)
+# make_png(r"C:\Users\roelo\Downloads\ModelQuestions\test.png",l_questions,questions_tryout[0])
+# image = Image.open(r"C:\Users\roelo\Downloads\ModelQuestions\test.png")
+# image.show()
+# make_dot(r"C:\Users\roelo\Downloads\ModelQuestions\test.gv",l_questions,questions_tryout[0])
+CustomLarkFunctions.pydot__tree_to_dot_custom(l_questions.parse(questions_tryout[0]),
+                                              r"C:\Users\roelo\Downloads\ModelQuestions\test.gv",
+                                              "TP",splines="ortho",packMode="graph")
+CustomLarkFunctions.pydot__tree_to_png_custom(l_questions.parse(questions_tryout[0]),
+                                              r"C:\Users\roelo\Downloads\ModelQuestions\test.png",
+                                              "TP",splines="ortho",packMode="graph")
 
