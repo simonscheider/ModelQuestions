@@ -2,6 +2,8 @@ import os
 from lark import Lark
 from lark import tree
 from slugify import slugify
+from lark.tree import Tree
+import hashlib
 import pydot
 
 #grammar
