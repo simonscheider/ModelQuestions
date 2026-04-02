@@ -3,14 +3,16 @@
 
 from lark import Lark, tree
 from rich import print
-#import pydot
+
+import pydot
+import os
 
 #Grammars:
 footer= r'''
-
         %import common.ESCAPED_STRING -> STRING
         %import common.SIGNED_NUMBER -> NUMBER
         %import common.WS 
+        YEAR: /[0-9]{4}/
         %ignore WS
 '''
 
@@ -24,20 +26,20 @@ conceptGrammar = '''
     tr : "before" | "after" | "during" | "at" | "in"
     space : "space" | "location" |  STRING
     region : "region" | "amount of" space | "area" 
-    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | STRING    
+    spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | "around" | STRING    
     compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
-    magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height") ("in" unit)? 
+    magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" | "postcode identifier" | "population" | "population counts") ("in" unit)? 
     quantified : intensive | extensive
     intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
     extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? 
-    object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"|STRING
-    stuff :  "money" | "rain" | "soil"| "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | STRING
+    object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"| "tram line" | "metro line" | "passenger" | "area" | "species" | "address" | "postcode 4 area" | "neighborhood" | "grid cell" | STRING
+    stuff :  "money" | "rain" | "soil" | "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | "exposure" | "wheat yield" | "weather" | "crop management practice" | "soil conditions" | "soil loss" | "labour cost" | "conservation measure" | STRING
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
 '''
 nominatorGrammar = conceptGrammar + '''
     nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
-    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | STRING
+    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | YEAR
     contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
@@ -57,7 +59,7 @@ questionGrammar =  spatialExperimentGrammar + r'''
     factualcondition : spexperiment ("is"|"are"|"was"|"were"|"to be"|"being") ("such and such"| optimal | fix)  contemporaryreference 
     counterfactualcondition : spexperiment ("was"|"were") ("such and such"| optimal | fix) contemporaryreference 
     projectedcondition : spexperiment ("will be"|"being") ("such and such"| optimal | fix) futurereference 
-    simplemodel : spexperiment contemporaryreference
+    simplemodel : spexperiment (contemporaryreference)?
     transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
     contemporary : "What" ("is"|"are") ("the")? (simplemodel|transformationmodel) 
     prediction : "What" "will be" ("the")? spexperiment futurereference "given that" ("the")?  factualcondition 
@@ -114,7 +116,7 @@ experiments = [
 'tomorrow for each day in this year'
 ]
 
-parsetrees(l_spEx,experiments)
+#parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
@@ -129,6 +131,8 @@ testquestions=[
 'What would be the proportional amount of space of green for each neighborhood in "Amsterdam" in the future if the quantified amount of building was such and such now?',
 'What should be the proportional amount of space of green for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant will be such and such in the future?',
 ]
+
+
 #These are the questions used in the paper:
 questions =[
 'What is the shortest (time to ambulance station from each building) in "Rotterdam" at present?',
@@ -148,19 +152,311 @@ questions =[
 'What should be the location of ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
 'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
-parsetrees(l_questions,questions)
+#parsetrees(l_questions,questions)
 
-questions_caspar=[
-'What is the averaged (quantified amount of NO2 for each (location of some sensor)) for each year in "Amsterdam" now?',
-'What is the amount of space for each (interval of quantified noise in decibel) in "Amsterdam" now?',
-'What is the location magnitude interval of time duration of each earthquake in "Amsterdam" until now?',
-'What is the location height of each tree in "Amsterdam" now?',
-'What is the amount of space for each (interval of quantified amount of cost) for each year after "2002" in "Amsterdam" now?'
+
+
+
+
+
+# -------- ThesisCasper ------------
+
+
+#These are the questions that are used in the survey
+survey_questions = [
+    {
+        "dataset_id": "NO2_Amsterdam_2025",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the concentration of NO₂ for each sensor location in Amsterdam in 2025?",
+        "parser_question": 'What is the quantified amount of NO2 for each (location of sensor) in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "NO2_Amsterdam_2025",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the location for each NO₂ concentration value in Amsterdam?",
+        "parser_question": 'What is the location for each quantified amount of NO2 in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "NO2_Amsterdam_2025",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "temporal_mismatch",
+        "display_question": "What will be concentration of NO₂ for each location of some sensor in Amsterdam in 2026?",
+        "parser_question": 'What will be the quantified amount of NO2 for each (location of sensor) in "Amsterdam" in the future given that the quantified amount of NO2 for each (location of sensor) is such and such now?'
+    },
+    {
+        "dataset_id": "HousingValue_Amsterdam_2024",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What was the amount of space for each interval of housing price in Amsterdam in 2024?",
+        "parser_question": 'What is the amount of space for each interval of housing price in "Amsterdam" in 2024?'
+    },
+    {
+        "dataset_id": "HousingValue_Amsterdam_2024",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What was the average housing price for each area in Amsterdam in 2024?",
+        "parser_question": 'What is the averaged amount of housing price for each area in "Amsterdam" in 2024?'
+    },
+    {
+        "dataset_id": "HousingValue_Amsterdam_2024",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_mismatch",
+        "display_question": "What was the amount of houses occupied by each interval of housing price in Amsterdam in 2024?",
+        "parser_question": 'What is the number of building for each interval of housing price in "Amsterdam" in 2024?'
+    },
+    {
+        "dataset_id": "Earthquakes_Groningen_2025",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What was the magnitude of each earthquake that occurred in Groningen province in 2025, and where did each event occur?",
+        "parser_question": 'What is the magnitude of each earthquake within "Groningen province" in 2025?'
+    },
+    {
+        "dataset_id": "Earthquakes_Groningen_2025",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_mismatch",
+        "display_question": "What was the number of earthquakes that were observed for each location in Groningen province in 2025?",
+        "parser_question": 'What is the number of earthquake for each location in "Groningen province" in 2025?'
+    },
+    {
+        "dataset_id": "Earthquakes_Groningen_2025",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_mismatch",
+        "display_question": "What was the duration of the latest earthquake in Groningen province in 2025?",
+        "parser_question": 'What is the duration of earthquake in "Groningen province" in 2025?'
+    },
+    {
+        "dataset_id": "MetroLines_Amsterdam",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the amount of linear space occupied by each tram line in Amsterdam now?",
+        "parser_question": 'What is the length for each tram line in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "MetroLines_Amsterdam",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the amount of metro lines crossing each area in Amsterdam now?",
+        "parser_question": 'What is the number of metro line for each area in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "MetroLines_Amsterdam",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_mismatch",
+        "display_question": "What is the number of passengers that use each metro or tram line in Amsterdam right now?",
+        "parser_question": 'What is the number of passenger for each tram line in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "Noise_Amsterdam_2021",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What was the amount of space occupied by each interval of quantified noise in decibel in Amsterdam in 2021?",
+        "parser_question": 'What is the amount of space for each interval of quantified noise in decibel in "Amsterdam" in 2021?'
+    },
+    {
+        "dataset_id": "Noise_Amsterdam_2021",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "spatial_mismatch",
+        "display_question": "What was the amount of space occupied by each interval of quantified noise in decibel around Schiphol Airport in 2021?",
+        "parser_question": 'What is the amount of space for each interval of quantified noise in decibel around "Schiphol Airport" in 2021?'
+    },
+    {
+        "dataset_id": "Noise_Amsterdam_2021",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What was the interval of quantified noise in decibel for each neighborhood region in Amsterdam in 2021?",
+        "parser_question": 'What is the interval of quantified noise in decibel for each region in "Amsterdam" in 2021?'
+    },
+    {
+        "dataset_id": "Trees_Amsterdam",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What are the location, species and height of each tree in Amsterdam now?",
+        "parser_question": 'What is the height for each tree in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "Trees_Amsterdam",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the amount of space covered by the amount of trees for each interval of tree height in Amsterdam now?",
+        "parser_question": 'What is the amount of space for each interval of height of tree in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "Trees_Amsterdam",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_mismatch",
+        "display_question": "What is the total canopy coverage area for each tree species in Amsterdam now?",
+        "parser_question": 'What is the canopy coverage area for each species in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "PostcodeAreas_Amsterdam",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the postcode identifier for each address in Amsterdam?",
+        "parser_question": 'What is the postcode identifier for each address in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "PostcodeAreas_Amsterdam",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What amount of space is covered by each postcode 4 area in Amsterdam?",
+        "parser_question": 'What is the amount of space for each postcode 4 area in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "PostcodeAreas_Amsterdam",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the number of postcode 4 areas per neighborhood in Amsterdam?",
+        "parser_question": 'What is the number of postcode 4 area for each neighborhood in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "PopulationDensity_Netherlands",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the population for each 1 km² grid cell in the Netherlands?",
+        "parser_question": 'What is the population for each grid cell in "the Netherlands" now?'
+    },
+    {
+        "dataset_id": "PopulationDensity_Netherlands",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the amount of space for each interval of population counts in the Netherlands?",
+        "parser_question": 'What is the amount of space for each interval of population counts in "the Netherlands" now?'
+    },
+    {
+        "dataset_id": "PopulationDensity_Netherlands",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the average number of inhabitants per municipality in the Netherlands?",
+        "parser_question": 'What is the averaged amount of inhabitant for each municipality in "the Netherlands" now?'
+    },
+    {
+        "dataset_id": "NO2_Projection",
+        "option_id": "B",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What will be the change of quantified amount of NO₂ exposure for each location in \"Amsterdam\" tomorrow?",
+        "parser_question": 'What will be the quantified amount of NO2 for each location in "Amsterdam" tomorrow given that the quantified amount of NO2 for each location in "Amsterdam" is such and such now?'
+    },
+    {
+        "dataset_id": "NO2_Projection",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "prediction_mismatch",
+        "display_question": "What would be the change of quantified amount of NO₂ exposure for each location in \"Amsterdam\" in the future if the traffic restriction zone scenario was implemented now?",
+        "parser_question": 'What would be the quantified amount of NO2 for each location in "Amsterdam" in the future if the quantified amount of NO2 for each location in "Amsterdam" was such and such now?'
+    },
+    {
+        "dataset_id": "NO2_Projection",
+        "option_id": "A",
+        "is_correct": False,
+        "mismatch_type": "retrodiction_mismatch",
+        "display_question": "What could have been the traffic event yesterday causing the change of the quantified amount of NO₂ exposure in \"Amsterdam\" being such and such now?",
+        "parser_question": 'What could have been the event yesterday given that the quantified amount of NO2 for each location in "Amsterdam" is such and such now?'
+    },
+    {
+        "dataset_id": "WheatYield_Prediction",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What will be the quantified amount of wheat yield for each location in the study area in the future given that weather and soil conditions are such and such now?",
+        "parser_question": 'What will be the quantified amount of wheat yield for each location in "study area" in the future given that the weather for each location in "study area" is such and such now?'
+    },
+    {
+        "dataset_id": "WheatYield_Prediction",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "retrojection_mismatch",
+        "display_question": "What should be the crop management practice for each location in the study area now now so that wheat yield be maximal in the future?",
+        "parser_question": 'What should be the crop management practice for each location in "study area" now so that the quantified amount of wheat yield for each location in "study area" will be maximal in the future?'
+    },
+    {
+        "dataset_id": "WheatYield_Prediction",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "retrodiction_mismatch",
+        "display_question": "What could have been the event causing wheat yield being such and such now?",
+        "parser_question": 'What could have been the event earlier given that the quantified amount of wheat yield is such and such now?'
+    },
+    {
+        "dataset_id": "ConservationMeasures_Retrojection",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What should be the amount of space (or region) occupied by each conservation measure in agricultural land now so that the quantified amount of soil loss and labour cost will be minimal in the future?",
+        "parser_question": 'What should be the amount of space for each conservation measure in "agricultural land" now so that the quantified amount of soil loss will be minimal in the future?'
+    },
+    {
+        "dataset_id": "ConservationMeasures_Retrojection",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "retrodiction_mismatch",
+        "display_question": "What could have been the land management event causing the quantified amount of soil loss and labour cost being such and such now?",
+        "parser_question": 'What could have been the event earlier given that the quantified amount of soil loss is such and such now?'
+    },
+    {
+        "dataset_id": "ConservationMeasures_Retrojection",
+        "option_id": "C",
+        "is_correct": False,
+        "mismatch_type": "prediction_mismatch",
+        "display_question": "What will be the quantified amount of soil loss and labour cost in the study area in the future?",
+        "parser_question": 'What will be the quantified amount of soil loss in "study area" in the future given that the quantified amount of soil loss in "study area" is such and such now?'
+    }
+
+
 ]
 
 
-parsetrees(l_questions,questions_caspar)
+# -------- OUTPUT SECTION ---------
+
+def print_survey_parse_trees():
+    questions_only = [q["parser_question"] for q in survey_questions]
+    parsetrees(l_questions, questions_only)
+
+def save_png_parse_trees():
+    output_folder = "parseTreesSurvey"
+    os.makedirs(output_folder, exist_ok=True)
+
+    for q in survey_questions:
+        filename = os.path.join(output_folder, f'{q["dataset_id"]}_{q["option_id"]}.png')
+        make_png(filename, l_questions, q["parser_question"])
+        print(f"Saved: {filename}")
+
+PRINT_TREES = True
+SAVE_PNGS = False
+
+if PRINT_TREES:
+    print_survey_parse_trees()
+
+if SAVE_PNGS:
+    save_png_parse_trees()
 
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
 
