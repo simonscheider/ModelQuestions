@@ -1,0 +1,12 @@
+dataset,ted_nearest,meta_nearest,same_nearest,ted_distance,meta_distance
+NO2_Amsterdam_2025,MetroLines_Amsterdam,WheatYield_Prediction,False,21.0,0.23905295
+HousingValue_Amsterdam_2024,Noise_Amsterdam_2021,Noise_Amsterdam_2021,True,12.0,0.39679718
+Earthquakes_Groningen_2025,MetroLines_Amsterdam,Noise_Amsterdam_2021,False,13.0,0.52973104
+MetroLines_Amsterdam,Trees_Amsterdam,PostcodeAreas_Amsterdam,False,2.0,0.39098072
+Noise_Amsterdam_2021,HousingValue_Amsterdam_2024,HousingValue_Amsterdam_2024,True,12.0,0.39679718
+Trees_Amsterdam,MetroLines_Amsterdam,PopulationDensity_Netherlands,False,2.0,0.4586004
+PostcodeAreas_Amsterdam,MetroLines_Amsterdam,MetroLines_Amsterdam,True,2.0,0.39098072
+PopulationDensity_Netherlands,MetroLines_Amsterdam,Trees_Amsterdam,False,3.0,0.4586004
+NO2_Projection,WheatYield_Prediction,ConservationMeasures_Retrojection,False,13.0,0.529078
+WheatYield_Prediction,NO2_Projection,NO2_Amsterdam_2025,False,13.0,0.23905295
+ConservationMeasures_Retrojection,MetroLines_Amsterdam,NO2_Projection,False,34.0,0.529078
