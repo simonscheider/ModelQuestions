@@ -68,9 +68,6 @@ if __name__ == "__main__":
     labels = get_labels_from_survey(correct_items)
 
     # Metadata text per dataset_id
-    # IMPORTANT:
-    # - keys must exactly match the dataset_id values in your survey_questions
-    # - descriptions should stay minimal and metadata-like
     metadata_by_dataset = {
         labels[0]: "Dataset of NO2 concentration measured at sensor locations in Amsterdam from 2010 to 2025.",
         labels[1]: "Dataset of housing value in Amsterdam in 2024.",
@@ -85,7 +82,6 @@ if __name__ == "__main__":
         labels[10]: "Dataset of conservation measures in agricultural land with soil loss outcomes.",
     }
 
-    # Build metadata texts in the exact same order as labels
     metadata_texts = [metadata_by_dataset[label] for label in labels]
 
     print("Datasets used for metadata comparison:")
