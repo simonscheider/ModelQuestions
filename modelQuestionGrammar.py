@@ -48,10 +48,12 @@ nominatorGrammar = conceptGrammar + '''
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
     relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
 '''
-spatialExperimentGrammar = nominatorGrammar + r'''    
-    spexperiment: (measure)+ (control)* (fix)* 
+#spexperiment: (measure)+ (control)* (fix)*
+spatialExperimentGrammar = nominatorGrammar + r'''  
+    measureconc: measure | measureconc ", " measure  
+    spexperiment: measureconc (control)* (fix)* 
     measure : nominator | concept | amount            
-    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
+    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some") (concept | amount)      
     fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr value | value | "with" optimal amount  
 '''
 questionGrammar =  spatialExperimentGrammar + r'''
@@ -61,7 +63,7 @@ questionGrammar =  spatialExperimentGrammar + r'''
     projectedcondition : spexperiment ("will be"|"being") ("such and such"| optimal | fix) futurereference 
     simplemodel : spexperiment (contemporaryreference)?
     transformationmodel : spexperiment contemporaryreference "given that" ("the")?  factualcondition
-    contemporary : "What" ("is"|"are") ("the")? (simplemodel|transformationmodel) 
+    contemporary : "What" ("is"|"are"|"was"|"were") ("the")? (simplemodel|transformationmodel) 
     prediction : "What" "will be" ("the")? spexperiment futurereference "given that" ("the")?  factualcondition 
     retrodiction : "What" "could have been" ("the")? spexperiment pastreference ("given that" | "causing") ("the")? factualcondition 
     projection : "What" "would be" ("the")? spexperiment futurereference ("if"|"when") ("the")? counterfactualcondition 
@@ -136,7 +138,7 @@ testquestions=[
 #These are the questions used in the paper:
 questions =[
 'What is the shortest (time to ambulance station from each building) in "Rotterdam" at present?',
-'What is the temperature for each location in "Utrecht" now given that the temperature for each (location of sensor) is such and such now?',
+'What is the temperature for each location in "Utrecht" now given that the temperature for each (location of some sensor) is such and such now?',
 'What will be the temperature in "Utrecht" tomorrow given that the temperature in "Utrecht" is 5 C today?',
 'What could have been the event in "Utrecht" yesterday causing the proportional amount of water for soil in "Utrecht" being 0.3 today?',
 'What would be the temperature in "Utrecht" in 20 years if the proportional amount of CO2 emissions of the world’s economy were halved today?',
@@ -170,7 +172,7 @@ survey_questions = [
         "is_correct": True,
         "mismatch_type": None,
         "display_question": "What is the concentration of NO₂ for each sensor location in Amsterdam in 2025?",
-        "parser_question": 'What is the quantified amount of NO2 for each (location of sensor) in "Amsterdam" now?'
+        "parser_question": 'What is the quantified amount of NO2 for each (location of some sensor) in "Amsterdam" now?'
     },
     {
         "dataset_id": "NO2_Amsterdam_2025",
@@ -186,7 +188,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "temporal_mismatch",
         "display_question": "What will be concentration of NO₂ for each location of some sensor in Amsterdam in 2026?",
-        "parser_question": 'What will be the quantified amount of NO2 for each (location of sensor) in "Amsterdam" in the future given that the quantified amount of NO2 for each (location of sensor) is such and such now?'
+        "parser_question": 'What will be the quantified amount of NO2 for each (location of some sensor) in "Amsterdam" in the future given that the quantified amount of NO2 for each (location of some sensor) is such and such now?'
     },
     {
         "dataset_id": "HousingValue_Amsterdam_2024",
@@ -234,7 +236,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_mismatch",
         "display_question": "What was the duration of the latest earthquake in Groningen province in 2025?",
-        "parser_question": 'What is the duration of earthquake in "Groningen province" in 2025?'
+        "parser_question": 'What is the duration of some earthquake in "Groningen province" in 2025?'
     },
     {
         "dataset_id": "MetroLines_Amsterdam",
@@ -289,8 +291,8 @@ survey_questions = [
         "option_id": "A",
         "is_correct": True,
         "mismatch_type": None,
-        "display_question": "What are the location, species and height of each tree in Amsterdam now?",
-        "parser_question": 'What is the height for each tree in "Amsterdam" now?'
+        "display_question": "What are the location, species, and height of each tree in Amsterdam now?",
+        "parser_question": 'What is the location, species, height for each tree in "Amsterdam" now?'
     },
     {
         "dataset_id": "Trees_Amsterdam",
@@ -298,7 +300,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_control_mismatch",
         "display_question": "What is the amount of space covered by the amount of trees for each interval of tree height in Amsterdam now?",
-        "parser_question": 'What is the amount of space for each interval of height of tree in "Amsterdam" now?'
+        "parser_question": 'What is the amount of space for each interval of height of each tree in "Amsterdam" now?'
     },
     {
         "dataset_id": "Trees_Amsterdam",
