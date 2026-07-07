@@ -1,2 +1,4 @@
-Spearman correlation: 0.474951
-p-value: 0.000248
+Pearson correlation: 0.515327
+R-squared: 0.265562
+Shared variance (%): 26.56
+p-value: 0.000000

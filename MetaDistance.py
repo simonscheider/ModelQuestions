@@ -65,21 +65,46 @@ def print_pair_summary(closest, farthest):
 if __name__ == "__main__":
     # Use the same dataset labels/order as the TED script
     correct_items = [q for q in survey_questions if q.get("is_correct")]
-    labels = get_labels_from_survey(correct_items)
+
+    temporal_ids = {
+        "NO2_Projection",
+        "WheatYield_Prediction",
+        "ConservationMeasures_Retrojection"
+    }
+
+    non_temporal = [
+        q for q in correct_items
+        if q["dataset_id"] not in temporal_ids
+    ]
+
+    temporal = [
+        q for q in correct_items
+        if q["dataset_id"] in temporal_ids
+    ]
+
+    correct_items = non_temporal + temporal
+
+    labels = [q["dataset_id"] for q in correct_items]
 
     # Metadata text per dataset_id
     metadata_by_dataset = {
-        labels[0]: "Dataset of NO2 concentration measured at sensor locations in Amsterdam from 2010 to 2025.",
-        labels[1]: "Dataset of housing value in Amsterdam in 2024.",
-        labels[2]: "Dataset of earthquake events with magnitude, occurrence and location in Groningen province over time.",
-        labels[3]: "Dataset of metro and tram lines in Amsterdam.",
-        labels[4]: "Dataset of noise in Amsterdam in 2021.",
-        labels[5]: "Dataset of trees with species and height in Amsterdam.",
-        labels[6]: "Dataset of postcode areas and postcode identifiers in Amsterdam.",
-        labels[7]: "Dataset of population counts in the Netherlands.",
-        labels[8]: "Dataset of spatial wheat yield estimates in a study area.",
-        labels[9]: "Dataset of NO2 exposure changes in Amsterdam under a traffic scenario.",
-        labels[10]: "Dataset of conservation measures in agricultural land with soil loss outcomes.",
+        "NO2_Amsterdam_2025": "Dataset of NO2 concentrations measured at sensor locations in Amsterdam, including spatial sensor locations and temporal coverage up to 2025.",
+        "HousingValue_Amsterdam_2024": "Dataset of housing values in Amsterdam in 2024, represented by spatial areas and housing price intervals.",
+        "Earthquakes_Groningen_2025": "Dataset of earthquake events in Groningen province in 2025, including event locations and earthquake magnitudes.",
+        "MetroLines_Amsterdam": "Dataset of tram and metro line geometries in Amsterdam, representing linear public transport infrastructure.",
+        "Noise_Amsterdam_2021": "Dataset of environmental noise levels in Amsterdam in 2021, represented by spatial noise intervals measured in decibels.",
+        "Trees_Amsterdam": "Dataset of individual trees in Amsterdam, including tree locations, species, and height attributes.",
+        "PostcodeAreas_Amsterdam": "Dataset of postcode areas and postcode identifiers in Amsterdam, representing administrative postal zones and address references.",
+        "PopulationDensity_Netherlands": "Dataset of population counts for grid cells in the Netherlands, representing population distribution over a regular spatial grid.",
+        "RoadAccidents_NL": "Dataset containing registered road accidents in the Netherlands in 2024, including municipality, province, date, road characteristics, and accident severity information.",
+        "GreenSpace_Amsterdam": "Dataset containing polygon features of parks and recreational green spaces in Amsterdam, including name, district, park classification, and surface area.",
+        "Temperature_Sensors_NL": "Dataset containing minimum temperature observations for weather sensor locations in the Netherlands on April 27, 2024.",
+        "Rainfall_Sensors_NL": "Dataset containing rainfall amount observations for weather sensor locations in the Netherlands on March 30, 2024.",
+        "Hospitals_NL": "Dataset containing locations of emergency general practitioner posts or hospital-related emergency care locations in the Netherlands.",
+        "Landcover_NL": "Raster dataset representing land cover and land use classes in the Netherlands at 5 meter spatial resolution, including agricultural, forest, water, nature, and urban classes.",
+        "NO2_Projection": "Dataset of NO2 exposure changes in Amsterdam under a traffic restriction scenario, representing future air quality outcomes under a hypothetical intervention.",
+        "WheatYield_Prediction": "Dataset of spatial wheat yield estimates in a study area, representing future yield outcomes based on weather and soil conditions.",
+        "ConservationMeasures_Retrojection": "Dataset of conservation measures in agricultural land, representing spatial planning options related to future soil loss reduction."
     }
 
     metadata_texts = [metadata_by_dataset[label] for label in labels]

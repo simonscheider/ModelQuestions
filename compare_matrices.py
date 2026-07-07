@@ -3,7 +3,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from scipy.stats import spearmanr
+from scipy.stats import pearsonr
 
 
 def flatten_upper_triangle(matrix: np.ndarray) -> np.ndarray:
@@ -69,15 +69,22 @@ if __name__ == "__main__":
     ted_vals = flatten_upper_triangle(D_ted)
     meta_vals = flatten_upper_triangle(D_meta)
 
-    # Spearman rank correlation
-    corr, pval = spearmanr(ted_vals, meta_vals)
+    # Pearson correlation
+    corr, pval = pearsonr(ted_vals, meta_vals)
+
+    # R-squared: proportion of shared variance
+    r_squared = corr ** 2
 
     print("\nMatrix comparison:")
-    print(f"Spearman correlation: {corr:.4f}")
+    print(f"Pearson correlation: {corr:.4f}")
+    print(f"R-squared: {r_squared:.4f}")
+    print(f"Shared variance: {r_squared * 100:.1f}%")
     print(f"p-value: {pval:.4f}")
 
     with open(output_dir / "matrix_correlation.txt", "w", encoding="utf-8") as f:
-        f.write(f"Spearman correlation: {corr:.6f}\n")
+        f.write(f"Pearson correlation: {corr:.6f}\n")
+        f.write(f"R-squared: {r_squared:.6f}\n")
+        f.write(f"Shared variance (%): {r_squared * 100:.2f}\n")
         f.write(f"p-value: {pval:.6f}\n")
 
     # Scatter plot
@@ -85,7 +92,7 @@ if __name__ == "__main__":
     plt.scatter(ted_vals, meta_vals)
     plt.xlabel("Tree Edit Distance")
     plt.ylabel("Metadata Distance")
-    plt.title("TED vs metadata distance")
+    plt.title(f"TED vs metadata distance\nPearson r = {corr:.2f}, R² = {r_squared:.2f}")
     plt.tight_layout()
     plt.savefig(output_dir / "ted_vs_metadata_scatter.png", dpi=300, bbox_inches="tight")
     plt.show()

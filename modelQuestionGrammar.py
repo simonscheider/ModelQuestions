@@ -13,6 +13,7 @@ footer= r'''
         %import common.SIGNED_NUMBER -> NUMBER
         %import common.WS 
         YEAR: /[0-9]{4}/
+        DATE: /[a-zA-Z]+ [0-9]{1,2}, [0-9]{4}/
         %ignore WS
 '''
 
@@ -23,7 +24,7 @@ conceptGrammar = '''
     twoc : onec "pair" | "pair of" onec
     time : "time" 
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
-    tr : "before" | "after" | "during" | "at" | "in"
+    tr : "before" | "after" | "during" | "on" | "in"
     space : "space" | "location" |  STRING
     region : "region" | "amount of" space | "area" 
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | "around" | STRING    
@@ -39,7 +40,7 @@ conceptGrammar = '''
 nominatorGrammar = conceptGrammar + '''
     nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
-    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | YEAR
+    temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | YEAR | DATE
     contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
@@ -169,7 +170,7 @@ survey_questions = [
         "option_id": "A",
         "is_correct": True,
         "mismatch_type": None,
-        "display_question": "What is the concentration of NO₂ for each sensor location in Amsterdam in 2025?",
+        "display_question": "What is the concentration of NO₂ for each location of some sensor in Amsterdam in 2025?",
         "parser_question": 'What is the quantified amount of NO2 for each (location of sensor) in "Amsterdam" now?'
     },
     {
@@ -427,13 +428,64 @@ survey_questions = [
         "mismatch_type": "prediction_mismatch",
         "display_question": "What will be the quantified amount of soil loss and labour cost in the study area in the future?",
         "parser_question": 'What will be the quantified amount of soil loss in "study area" in the future given that the quantified amount of soil loss in "study area" is such and such now?'
-    }
-
+    },
+        {
+        "dataset_id": "RoadAccidents_NL",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What was the number of road accidents for each municipality in the Netherlands in 2024?",
+        "parser_question": 'What is the number of road accident for each municipality in "the Netherlands" in 2024?'
+    },
+    {
+        "dataset_id": "GreenSpace_Amsterdam",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the amount of green space for each neighborhood in Amsterdam now?",
+        "parser_question": 'What is the amount of space of green for each neighborhood in "Amsterdam" now?'
+    },
+    {
+        "dataset_id": "Temperature_Sensors_NL",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What was the minimum temperature for each sensor location in the Netherlands on April 27, 2024?",
+        "parser_question": 'What is the minimal temperature for each (location of sensor) in "the Netherlands" on April 27, 2024?'
+    },
+    {
+        "dataset_id": "Rainfall_Sensors_NL",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What was the rainfall amount for each sensor location in the Netherlands on March 30, 2024?",
+        "parser_question": 'What is the quantified amount of rain for each (location of sensor) in "the Netherlands" on March 30, 2024?'
+    },
+    {
+        "dataset_id": "Hospitals_NL",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the location of each hospital in the Netherlands now?",
+        "parser_question": 'What is the location for each "Huisartsenspoedpost" in "the Netherlands" now?'
+    },
+    {
+        "dataset_id": "Landcover_NL",
+        "option_id": "A",
+        "is_correct": True,
+        "mismatch_type": None,
+        "display_question": "What is the land cover type for each location in the Netherlands now?",
+        "parser_question": 'What is the landcover for each location in "the Netherlands" now?'
+    },
 
 ]
 
 
 # -------- OUTPUT SECTION ---------
+
+for q in survey_questions:
+    if q["is_correct"]:
+        print(q["parser_question"])
 
 def print_survey_parse_trees():
     questions_only = [q["parser_question"] for q in survey_questions]

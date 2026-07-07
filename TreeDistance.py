@@ -91,8 +91,26 @@ def print_pair_summary(closest, farthest):
 
 if __name__ == "__main__":
     correct_items = [q for q in survey_questions if q.get("is_correct")]
+
+    temporal_ids = {
+        "NO2_Projection",
+        "WheatYield_Prediction",
+        "ConservationMeasures_Retrojection"
+    }
+
+    non_temporal = [
+        q for q in correct_items
+        if q["dataset_id"] not in temporal_ids
+    ]
+
+    temporal = [
+        q for q in correct_items
+        if q["dataset_id"] in temporal_ids
+    ]
+
+    correct_items = non_temporal + temporal
     questions = [q["parser_question"] for q in correct_items]
-    labels = get_labels_from_survey(survey_questions)
+    labels = [q["dataset_id"] for q in correct_items]
 
     n = len(questions)
     D = np.zeros((n, n), dtype=int)
