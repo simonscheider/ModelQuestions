@@ -1,0 +1,249 @@
+StartDate,EndDate,Status,IPAddress,Progress,Duration (in seconds),Finished,RecordedDate,ResponseId,RecipientLastName,RecipientFirstName,RecipientEmail,ExternalReference,LocationLatitude,LocationLongitude,DistributionChannel,UserLanguage,Introduction,Q0_1,Q0_2,Q0_2_6_TEXT,Q0_3,Q1,Q2,Q3,Q4,Q5,Q6,Q7,Q8,Q9_Projection,Q10_Prediction,Q11_Retrojection
+Start Date,End Date,Response Type,IP Address,Progress,Duration (in seconds),Finished,Recorded Date,Response ID,Recipient Last Name,Recipient First Name,Recipient Email,External Data Reference,Location Latitude,Location Longitude,Distribution Channel,User Language,"Welcome, and thank you for participating in this survey.
+
+
+
+This survey is part of a master’s thesis research project in Geographic Information Science. The aim of the study is to examine how users interpret what kinds of analytical questions a geospatial dataset can and cannot answer.
+
+
+
+In the survey, you will be shown brief descriptions of geospatial datasets together with several possible analytical questions. For each dataset, your task is to select the question that the dataset can answer, based on the information provided. The survey consists of two sections. The first section contains a small number of background questions about your experience with GIS and geospatial data. The second section contains the main task, in which you will evaluate several dataset–question combinations. The survey takes approximately 7 - 12 minutes to complete.
+
+
+
+Participation is voluntary, and you may stop at any time. No personally identifiable information will be collected. All responses will be used solely for research purposes and will be stored securely. If you have any questions about the study, you may contact the researcher via email.
+
+By proceeding with this survey, you indicate your informed consent to participate.
+
+
+
+Thank you for your time and contribution to this research.",How would you describe your experience with GIS and spatial data?,Which best describes your current or most recent role? - Selected Choice,Which best describes your current or most recent role? - Other (please specify) - Text,Have you previously worked with geospatial datasets,"Topic
+      Nitrogen dioxide (NO₂) monitoring stations - measured concentrations (2025)
+    
+
+    
+        Geometry
+      Vector Point
+    
+
+    
+        Attribute
+      Amount (µg/m³) of NO₂ (e.g., 31.394, 39.22, 40.311)
+    
+  
+
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Housing value per square meter in Amsterdam (2024)
+		
+		
+			  Geometry
+			Vector Polygon
+		
+		
+			  Attribute
+			Housing value per square meter (€ / m²), grouped into five intervals
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","TopicEarthquake occurrences in Groningen province (2025)
+		
+		
+			  Geometry
+			Vector Point
+		
+		
+			  AttributeEarthquake magnitude (e.g., Richter scale values) recorded for each event
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Metro and tram lines in Amsterdam (current network)
+		
+		
+			  Geometry
+			Vector line
+		
+		
+			  Attribute
+			Line identifier (e.g., 19, 7, 5)
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Estimated environmental noise levels in Amsterdam Center (2021)
+		
+		
+			  Geometry
+			Vector region
+		
+		
+			  Attribute
+			Average environmental noise level (decibels, dB), grouped into five intervals
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Urban trees in Amsterdam
+		
+		
+			  Geometry
+			Vector point
+		
+		
+			  Attribute
+			Tree characteristics, including species, planting year, interval of crown diameters and height
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Postcode 4 areas in Amsterdam (current administrative boundaries)
+		
+		
+			  Geometry
+			Vector region
+		
+		
+			  Attribute
+			Postcode 4 code (four-digit postal area identifier)
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Population distribution per 1 km² grid cell in the Netherlands
+		
+		
+			  Geometry
+			Raster (1 km × 1 km cells)
+		
+		
+			  Attribute
+			Number of inhabitants per grid cell (absolute population count within each 1 km² cell)
+		
+	
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Simulated change in nitrogen dioxide (NO₂) concentrations under a no-emission zone scenario in Amsterdam (2025)
+		
+		
+			  Geometry
+			Raster
+		
+		
+			  Attribute
+			Simulated change in nitrogen dioxide (NO₂) concentration (µg/m³) compared to a baseline scenario
+		
+	
+
+  This dataset contains results from an agent-based simulation model of mobility and environmental exposure in Amsterdam. The model simulates how hypothetical urban planning interventions affect traffic, air pollution exposure, travel behaviour, and health indicators. The dataset represents simulated scenario outcomes rather than direct measurements.
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Projected wheat yield (t ha⁻¹) derived from a crop simulation model
+		
+		
+			  Geometry
+			Raster
+		
+		
+			  Attribute
+			Simulated wheat grain yield (tons per hectare)
+		
+	
+
+This dataset shows spatial predictions of wheat yield generated using a crop simulation model (WOFOST) combined with weather data, soil information, and remote sensing observations. The model forecasts crop yield across agricultural regions based on environmental conditions rather than observed harvest outcomes.
+
+
+
+Please select the question that this dataset can correctly answer.","Topic
+			Allocation of soil and water conservation (SWC) measures under uncertainty
+		
+		
+			  Geometry
+			Vector Polygon
+		
+		
+			  Attribute
+			Conservation status (bench terraces applied or not applied)
+		
+	
+
+This dataset shows modeled areas of soil conservation measures. The model aims to reduce soil loss and labour costs under different environmental conditions. The results represent planning scenarios rather than observed measures.
+
+Please select the question that this dataset can correctly answer."
+"{""ImportId"":""startDate"",""timeZone"":""America/Denver""}","{""ImportId"":""endDate"",""timeZone"":""America/Denver""}","{""ImportId"":""status""}","{""ImportId"":""ipAddress""}","{""ImportId"":""progress""}","{""ImportId"":""duration""}","{""ImportId"":""finished""}","{""ImportId"":""recordedDate"",""timeZone"":""America/Denver""}","{""ImportId"":""_recordId""}","{""ImportId"":""recipientLastName""}","{""ImportId"":""recipientFirstName""}","{""ImportId"":""recipientEmail""}","{""ImportId"":""externalDataReference""}","{""ImportId"":""locationLatitude""}","{""ImportId"":""locationLongitude""}","{""ImportId"":""distributionChannel""}","{""ImportId"":""userLanguage""}","{""ImportId"":""QID1""}","{""ImportId"":""QID3""}","{""ImportId"":""QID4""}","{""ImportId"":""QID4_6_TEXT""}","{""ImportId"":""QID5""}","{""ImportId"":""QID2""}","{""ImportId"":""QID6""}","{""ImportId"":""QID11""}","{""ImportId"":""QID12""}","{""ImportId"":""QID13""}","{""ImportId"":""QID14""}","{""ImportId"":""QID15""}","{""ImportId"":""QID16""}","{""ImportId"":""QID23""}","{""ImportId"":""QID24""}","{""ImportId"":""QID25""}"
+2026-02-16 16:00:41,2026-02-16 16:00:43,1,*******,100,2,1,2026-02-16 16:00:44,R_24hBuZgTvL7lxy1,*******,*******,*******,*******,*******,*******,preview,EN,2,,,,,,,,,,,,,,,
+2026-02-16 16:07:43,2026-02-16 16:07:50,1,*******,100,7,1,2026-02-16 16:07:51,R_2r2INVtlzKvIpa1,*******,*******,*******,*******,*******,*******,preview,EN,2,1,1,,1,,,,,,,,,,,
+2026-02-16 16:15:19,2026-02-16 16:15:33,1,*******,100,13,1,2026-02-16 16:15:34,R_2U2RGn0hoO3VL41,*******,*******,*******,*******,*******,*******,preview,EN,1,1,2,,2,,,,,,,,,,,
+2026-02-16 16:17:10,2026-02-16 16:17:40,1,*******,100,30,1,2026-02-16 16:17:41,R_2iEXAN7mlAIdBdU,*******,*******,*******,*******,*******,*******,preview,EN,1,2,1,,1,,,,,,,,,,,
+2026-02-16 16:57:59,2026-02-16 17:11:34,1,*******,100,814,1,2026-02-16 17:11:34,R_2oljheCbhXvLgTD,*******,*******,*******,*******,*******,*******,preview,EN,1,2,5,,1,1,1,,,,,,,,,
+2026-02-16 17:28:48,2026-02-16 17:28:52,1,*******,100,3,1,2026-02-16 17:28:52,R_2h8MioltUajSAdr,*******,*******,*******,*******,*******,*******,preview,EN,2,,,,,,,,,,,,,,,
+2026-02-16 17:28:58,2026-02-16 17:29:32,1,*******,100,34,1,2026-02-16 17:29:32,R_2L1j4k5LUXhU3s8,*******,*******,*******,*******,*******,*******,preview,EN,1,1,1,,1,2,1,1,3,2,2,3,1,,,
+2026-02-17 01:02:12,2026-02-17 01:03:06,1,*******,100,54,1,2026-02-17 01:03:10,R_2Ezqb82pQonI7cY,*******,*******,*******,*******,*******,*******,preview,EN,1,3,1,,1,,,,,,,,,2,1,1
+2026-02-17 01:10:55,2026-02-17 01:11:36,1,*******,100,40,1,2026-02-17 01:11:36,R_2YEyzrVBDNgwfVy,*******,*******,*******,*******,*******,*******,preview,EN,1,2,2,,1,2,1,2,1,2,1,1,2,1,2,1
+2026-02-18 02:31:54,2026-02-18 02:49:34,1,*******,100,1060,1,2026-02-18 02:49:34,R_21YfIENaTjglw4A,*******,*******,*******,*******,*******,*******,preview,EN,1,1,4,,1,,,,,,,,,3,3,3
+2026-02-18 06:04:36,2026-02-18 06:05:09,1,*******,100,32,1,2026-02-18 06:05:09,R_2D8x0JkE3exB9Ro,*******,*******,*******,*******,*******,*******,preview,EN,1,1,1,,1,,,,,,,,,1,3,1
+2026-02-26 02:12:45,2026-02-26 02:13:24,1,*******,100,39,1,2026-02-26 02:13:24,R_2Yxekq8Uq3qmRzw,*******,*******,*******,*******,*******,*******,preview,EN,1,1,5,,1,1,1,1,1,1,1,1,1,1,1,
+2026-03-02 05:55:06,2026-03-02 05:55:55,1,*******,100,48,1,2026-03-02 05:55:55,R_2pu4xqeZeqK0veL,*******,*******,*******,*******,*******,*******,preview,EN,1,1,2,,2,1,1,1,3,1,1,1,3,2,2,3
+2026-03-02 06:23:41,2026-03-02 06:24:26,1,*******,100,45,1,2026-03-02 06:24:27,R_2w9ZALZ74NoRl05,*******,*******,*******,*******,*******,*******,preview,EN,1,2,3,,2,1,1,1,3,1,2,3,2,3,3,2
+2026-03-02 06:37:46,2026-03-02 06:38:24,1,*******,100,38,1,2026-03-02 06:38:25,R_2Rdp3Hl1aOudoI4,*******,*******,*******,*******,*******,*******,preview,EN,1,3,5,,1,1,1,2,2,3,3,1,1,3,3,3
+2026-03-02 06:39:14,2026-03-02 06:40:05,1,*******,100,51,1,2026-03-02 06:40:06,R_27k93q4kkXdL11P,*******,*******,*******,*******,*******,*******,preview,EN,1,3,3,,2,1,2,2,2,1,3,1,2,2,3,3
+2026-03-03 07:48:14,2026-03-03 07:51:01,1,*******,100,167,1,2026-03-03 07:51:01,R_2j8S0eqv5RrMscN,*******,*******,*******,*******,*******,*******,preview,EN,1,3,3,,2,1,1,1,1,3,1,2,2,3,3,3
+2026-03-05 10:10:35,2026-03-05 10:11:47,1,*******,100,72,1,2026-03-05 10:11:48,R_2YfjQv4MZd2iPkt,*******,*******,*******,*******,*******,*******,preview,EN,1,4,4,,2,3,1,3,2,3,1,2,1,1,1,3
+2026-03-06 01:31:48,2026-03-06 02:45:20,1,*******,100,4411,1,2026-03-06 02:45:21,R_2SJPeDyjHVCbSsx,*******,*******,*******,*******,*******,*******,preview,EN,1,4,3,,1,1,1,1,1,1,1,2,1,3,3,3
+2026-03-17 01:40:00,2026-03-17 02:20:49,1,*******,100,2448,1,2026-03-17 02:20:49,R_2PKc1rwz7ANZ6zn,*******,*******,*******,*******,*******,*******,preview,EN,1,4,3,,1,1,1,1,1,2,1,2,1,3,3,3
+2026-04-01 08:10:14,2026-04-01 08:10:43,1,*******,100,28,1,2026-04-01 08:10:43,R_2NlrS9VxbTsfbMt,*******,*******,*******,*******,*******,*******,preview,EN,1,2,3,,1,2,1,2,1,3,2,3,1,3,1,3
+2026-04-07 06:27:20,2026-04-07 06:28:32,1,*******,100,72,1,2026-04-07 06:28:33,R_2hAqXv1UQyho2Ub,*******,*******,*******,*******,*******,*******,preview,EN,1,4,4,,1,3,1,1,3,1,3,1,1,2,1,2
+2026-04-07 06:49:59,2026-04-07 06:56:54,0,*******,100,415,1,2026-04-07 06:56:56,R_8fISqDfZkN9AFVD,*******,*******,*******,*******,*******,*******,anonymous,EN,1,4,2,,1,1,2,1,1,3,1,1,1,3,1,1
+2026-04-07 06:38:54,2026-04-07 07:04:28,0,*******,100,1534,1,2026-04-07 07:04:28,R_21fO0bzdMjqCLSN,*******,*******,*******,*******,*******,*******,anonymous,EN,1,3,2,,2,1,1,1,2,1,1,3,3,3,1,1
+2026-04-07 06:39:39,2026-04-07 07:33:15,0,*******,100,3216,1,2026-04-07 07:33:16,R_2NSYzEQYxV3ANeV,*******,*******,*******,*******,*******,*******,anonymous,EN,1,3,2,,2,1,1,1,2,1,1,1,1,3,1,1
+2026-04-08 02:48:45,2026-04-08 02:49:08,0,*******,100,22,1,2026-04-08 02:49:08,R_2JXTRuswf2Nvx6z,*******,*******,*******,*******,*******,*******,anonymous,EN,2,,,,,,,,,,,,,,,
+2026-04-08 02:49:16,2026-04-08 03:24:10,0,*******,100,2094,1,2026-04-08 03:24:10,R_2YlmDUuvfLwcAMo,*******,*******,*******,*******,*******,*******,anonymous,EN,1,3,2,,2,2,3,1,2,3,1,2,2,1,3,2
+2026-04-07 06:39:10,2026-04-09 15:13:07,0,*******,100,203637,1,2026-04-09 15:13:07,R_8gNCk7H1Rtzq689,*******,*******,*******,*******,*******,*******,anonymous,EN,1,3,2,,1,1,2,1,1,1,1,1,1,3,1,3
+2026-04-10 06:08:16,2026-04-10 06:25:27,0,*******,100,1031,1,2026-04-10 06:25:27,R_2B4DZEkrtZe95fc,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,2,2,1,2,1,3,1,1,3,2,1
+2026-04-10 06:35:29,2026-04-10 06:46:11,0,*******,100,641,1,2026-04-10 06:46:11,R_8hpJeONXRB5Kw0h,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,1,1,1,1,1,2,3,1,3,1,1
+2026-04-10 06:15:43,2026-04-10 10:32:39,0,*******,100,15415,1,2026-04-10 10:32:40,R_8YPu9X092JiyUvr,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,1,1,1,2,1,1,3,1,3,1,1
+2026-04-10 13:27:52,2026-04-10 13:40:04,0,*******,100,731,1,2026-04-10 13:40:04,R_80oSUYmyUxFUvYw,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,1,1,1,2,3,3,2,2,3,1,1
+2026-04-11 11:58:10,2026-04-11 12:07:58,0,*******,100,588,1,2026-04-11 12:08:01,R_8E3K1eMaaKHtZa5,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,3,1,1,1,1,1,2,2,1,3,1,1
+2026-04-13 00:19:32,2026-04-13 00:28:18,0,*******,100,526,1,2026-04-13 00:28:19,R_24iMqpekSwg5ijL,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,6,"Pre-master ",3,1,2,1,2,1,2,2,3,2,1,1
+2026-04-13 08:51:15,2026-04-13 08:57:33,0,*******,100,377,1,2026-04-13 08:57:33,R_2OH2XZtH9vxc0S7,*******,*******,*******,*******,*******,*******,anonymous,EN,1,3,2,,1,1,1,1,1,1,1,1,1,3,1,1
+2026-04-07 06:38:16,2026-04-07 06:41:42,0,*******,82,206,0,2026-04-14 06:41:44,R_8LchtO9ecyBf1im,*******,*******,*******,*******,*******,*******,anonymous,EN,1,4,2,,1,1,2,1,1,1,1,1,1,,,
+2026-04-07 06:57:30,2026-04-07 07:03:55,0,*******,82,384,0,2026-04-14 07:03:55,R_4znL6b4txVxGKCB,*******,*******,*******,*******,*******,*******,anonymous,EN,1,4,2,,1,1,1,1,2,1,1,2,1,,,
+2026-04-07 07:31:47,2026-04-07 07:38:31,0,*******,82,404,0,2026-04-14 07:38:32,R_2rjTDH4PCuvulkm,*******,*******,*******,*******,*******,*******,anonymous,EN,1,4,2,,1,1,2,1,2,1,1,3,1,,,
+2026-04-15 00:40:19,2026-04-15 00:48:41,0,*******,100,502,1,2026-04-15 00:48:42,R_2aLdW8yBgzAEtOA,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,1,1,1,1,1,1,3,2,3,1,3
+2026-04-15 03:02:34,2026-04-15 03:17:42,0,*******,100,908,1,2026-04-15 03:17:43,R_8ENkqUV8E7eARlz,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,1,1,1,1,1,1,2,1,3,1,1
+2026-04-17 01:59:58,2026-04-17 02:10:57,0,*******,100,659,1,2026-04-17 02:10:58,R_8RaqYXZ6AMhNw4e,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,2,1,1,1,1,1,3,1,3,1,3
+2026-04-10 05:40:14,2026-04-10 05:40:55,0,*******,24,40,0,2026-04-17 05:40:55,R_2QiOM1wGSU2xtpS,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,,,,,,,,,,,
+2026-04-10 05:40:06,2026-04-10 05:41:25,0,*******,29,78,0,2026-04-17 05:41:25,R_2PpQXlYjbMvbZD2,*******,*******,*******,*******,*******,*******,anonymous,EN,1,4,3,,1,,,,,,,,,,,
+2026-04-10 05:40:26,2026-04-10 05:42:00,0,*******,29,93,0,2026-04-17 05:42:03,R_2dgcrQ34f1OZphw,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,,,,,,,,,,,
+2026-04-10 05:40:06,2026-04-10 05:43:41,0,*******,47,215,0,2026-04-17 05:43:44,R_8HcOuKUTseM59Zf,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,6,Pre-master student,2,,,,1,1,1,,,,,
+2026-04-10 05:52:12,2026-04-10 05:52:19,0,*******,6,7,0,2026-04-17 05:52:25,R_2huQC6iL6FrbdBL,*******,*******,*******,*******,*******,*******,anonymous,EN,1,,,,,,,,,,,,,,,
+2026-04-10 05:53:32,2026-04-10 05:54:20,0,*******,24,47,0,2026-04-17 05:54:24,R_82WDCWiF6qNXZGw,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,3,,,,,,,,,,,
+2026-04-10 10:25:27,2026-04-10 10:25:31,0,*******,6,4,0,2026-04-17 10:25:34,R_2syMA0FodCDZpBM,*******,*******,*******,*******,*******,*******,anonymous,EN,1,,,,,,,,,,,,,,,
+2026-04-10 11:23:30,2026-04-10 11:24:32,0,*******,29,62,0,2026-04-17 11:24:36,R_81LEcdO2bD9jx0C,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,,,,,,,,,,,
+2026-04-18 01:14:22,2026-04-18 01:23:01,0,*******,100,518,1,2026-04-18 01:23:01,R_20wjfIA06bPimqJ,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,2,,2,1,2,1,2,3,1,2,1,3,1,1
+2026-04-18 01:15:41,2026-04-18 01:31:54,0,*******,100,973,1,2026-04-18 01:31:55,R_2PBv9GsPqnzpTc4,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,2,,2,1,1,1,1,1,1,2,2,3,1,1
+2026-04-18 03:43:30,2026-04-18 04:13:12,0,*******,100,1781,1,2026-04-18 04:13:12,R_87pVgLC20xOKu2d,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,2,,2,2,2,1,2,1,1,2,1,3,1,1
+2026-04-12 11:27:14,2026-04-12 11:28:32,0,*******,29,78,0,2026-04-19 11:28:34,R_2FUV7FUxTLL9XpJ,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,,,,,,,,,,,
+2026-04-13 04:49:50,2026-04-13 04:56:43,0,*******,82,413,0,2026-04-20 04:56:44,R_20bEAEB3KNYZBOF,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,2,,2,1,2,1,2,3,1,1,1,,,
+2026-04-15 01:06:28,2026-04-15 01:07:02,0,*******,24,33,0,2026-04-22 01:07:08,R_8IcSo14Kvn6q0fd,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,3,,,,,,,,,,,
+2026-04-22 04:06:46,2026-04-22 04:14:20,0,*******,100,454,1,2026-04-22 04:14:21,R_8FhMml5kXIBLd8B,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,2,,2,1,1,1,2,1,1,3,1,3,2,1
+2026-04-16 00:56:00,2026-04-16 01:03:51,0,*******,71,470,0,2026-04-23 01:03:59,R_29sirUxAf6GpVfb,*******,*******,*******,*******,*******,*******,anonymous,EN,1,2,1,,2,,2,1,1,1,3,2,1,,,
+2026-04-18 12:00:21,2026-04-18 12:04:40,0,*******,65,259,0,2026-04-25 12:04:45,R_8ewzrm2XkdldXt2,*******,*******,*******,*******,*******,*******,anonymous,EN,1,3,4,,2,,1,1,1,3,2,,1,,,

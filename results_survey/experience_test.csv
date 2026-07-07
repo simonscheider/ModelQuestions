@@ -1,0 +1,2 @@
+beginner_n,skilled_n,beginner_mean_accuracy_pct,skilled_mean_accuracy_pct,mann_whitney_u,p_value
+14,9,70.0,74.5,43.5,0.225648685485211
