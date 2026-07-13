@@ -67,7 +67,7 @@ quantityGrammar = amountGrammar + '''
     ppunit : "per unit" magnitude    
 '''
 predicatorGrammar = quantityGrammar + '''
-    predicator : pair | quantity | thing | event | occurrence
+    predicator : pair | quantity | thing | event | occurrence   
     pair : predicator "pair" | "pair of" predicator
     thing : endurant | time | space | amount 
     endurant : object | portion       
