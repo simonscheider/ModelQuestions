@@ -17,43 +17,70 @@ footer= r'''
         %ignore WS
 '''
 
-conceptGrammar = '''
-    amount : "interval of" magnitude | timeinterval | region | (("amount of")? ("(" spexperiment ")" | concept) ("s")?) | "sum of" ("the")? amount  
-    concept : onec | twoc
-    onec : object  | event | stuff | space | time | magnitude
-    twoc : onec "pair" | "pair of" onec
+identitydomainGrammar = '''
+    identityconcept : object | event | time | space | occurrence
+    object : "postcode identifier" | "tree"| "lifestock" | place | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"| "tram line" | "metro line" | "passenger" | "area" | "species" | "address" | "postcode 4 area" | "neighborhood" | "grid cell" | STRING
+    place : "place"
+    event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     time : "time" 
-    timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
     tr : "before" | "after" | "during" | "on" | "in"
     space : "space" | "location" |  STRING
-    region : "region" | "amount of" space | "area" 
     spr : "in" | "within" | "touching" | "overlapping" | "away from" | "west of" | "north of" | "south of"| "east of" | "at" | "between" | "close to" | "around" | STRING    
-    compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING   
-    magnitude : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" | "postcode identifier" | "population" | "population counts") ("in" unit)? 
-    quantified : intensive | extensive
-    intensive :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
-    extensive : "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? 
-    object : "tree"| "lifestock" | "place" | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"| "tram line" | "metro line" | "passenger" | "area" | "species" | "address" | "postcode 4 area" | "neighborhood" | "grid cell" | STRING
-    stuff :  "money" | "rain" | "soil" | "water" | "air pressure" | "noise" | "temperature" | "green" | "landcover" | "health" |  "energy"| "ethanol" | "cost" | "tax" | "CO2 emissions"| "NO2" | "exposure" | "wheat yield" | "weather" | "crop management practice" | "soil conditions" | "soil loss" | "labour cost" | "conservation measure" | STRING
-    event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
+    compr : "larger than" | "less than" | "equal to" | "changed to" | "below" | "above" | STRING 
+    occurrence : process | state | action
+    state : "state"
+    process : flow | movement    
+    flow : "flow"
+    movement : "movement" 
+    action : "action" 
 '''
-nominatorGrammar = conceptGrammar + '''
-    nominator : temporalnominator | spatialnominator | ("this"|"that") (concept | amount) | optimal amount | value | STRING  
+
+amountGrammar = identitydomainGrammar + '''
+    portion : stuff | amountofobjects
+    stuff : ("amount of")? (material | energy | value |  "exposure" | "weather" | "crop management practice" | "conservation measure" | STRING)
+    amountofobjects : ("amount of")? object ("s")?
+    material : "forest" | "rain" | "soil" | "water" | "green" | "landcover" | "CO2 emissions"| "NO2" | "ethanol" | "soil conditions" | "soil loss" | "wheat yield" | STRING
+    value : "money" | "cost" | "tax" | "labour cost" | "health" | STRING
+    energy : "temperature" | "energy" | "noise" | "air pressure" | STRING
+    amount :  stuff | set | "sum of" ("the")? amount    
+    set : "interval of" (time | quantity) | region | amountofobjects | (("amount of" | "set of")? ("(" spexperiment ")" | identityconcept | quantity) ("s")?)
+    quantity : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" | "population" | "population counts") ("in" unit)? 
+    quantified : proportion | magnitude
+    proportion :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
+    magnitude : "magnitude of" | "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? 
+    timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
+    region : "region" | "amount of" space | "area" 
+'''
+#| concept
+# concept: onec | twoc
+# onec: object | event | stuff | space | time | magnitude
+# twoc: onec "pair" | "pair of" onec
+
+predicatorGrammar = amountGrammar + '''
+    predicator : pair | quantity | thing | event | occurrence
+    pair : predicator "pair" | "pair of" predicator
+    thing : endurant | time | space | amount 
+    endurant : object | portion       
+'''
+nominatorGrammar = predicatorGrammar + '''
+    nominator : objectnominator | temporalnominator | spatialnominator | ("this"|"that") predicator | optimal amount | quantityvalue | STRING
+    objectnominator : placenominator | STRING
+    placenominator :  "this" place | "the Netherlands"
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
     temporalnominator :  "this" (time| timeinterval | event) | "Christmas" | contemporaryreference | pastreference | futurereference | YEAR | DATE
     contemporaryreference : ("starting")? ("now" | "currently" | "at present" | "today" | "from now on" | "until now"|"this summer" | "at the end of the African humid period")
     pastreference : ("starting")? ("earlier" | "in the past" | NUMBER "years ago" | "last week" | "yesterday")
     futurereference : ("starting")? ("in the future" | "later"   | "in 2030" | "tomorrow" | "from now on" | "in 20 years"|"this summer")
-    spatialnominator :  "this" (space | region) | STRING
-    value : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
+    spatialnominator :  placenominator | "this" (space | region) |  STRING
+    quantityvalue : NUMBER unit | "infinite" unit | STRING  | NUMBER | "halved" | relativechange
     unit : "minutes" | "kilometers" | "meters" | "R/l" | "liters" | "C" | "µg/m³" | "decibel"
-    relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?
+    relativechange : ("increased"|"decreased"|"doubled"|"halved"|"reduced") ("by" NUMBER ("percent")?)?    
 '''
 spatialExperimentGrammar = nominatorGrammar + r'''    
     spexperiment: (measure)+ (control)* (fix)* 
-    measure : nominator | concept | amount            
-    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (concept | amount)      
-    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr value | value | "with" optimal amount  
+    measure : nominator | predicator            
+    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (predicator)      
+    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr quantityvalue | quantityvalue | "with" optimal amount  
 '''
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
@@ -153,7 +180,7 @@ questions =[
 'What should be the location of ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
 'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
-#parsetrees(l_questions,questions)
+parsetrees(l_questions,questions)
 
 
 
@@ -203,7 +230,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_control_mismatch",
         "display_question": "What was the average housing price for each area in Amsterdam in 2024?",
-        "parser_question": 'What is the averaged amount of housing price for each area in "Amsterdam" in 2024?'
+        "parser_question": 'What is the averaged housing price for each area in "Amsterdam" in 2024?'
     },
     {
         "dataset_id": "HousingValue_Amsterdam_2024",
