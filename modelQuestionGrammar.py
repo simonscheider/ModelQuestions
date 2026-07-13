@@ -21,14 +21,14 @@ identitydomainGrammar = '''
     identityconcept : object | event | time | space | occurrence
     object : place | living | socialobject | functionalobject |  STRING
     person : "inhabitant" | "person" | "passenger" | (stuff)? "consumer" | (stuff)? "producer"
-    plant : "tree" | animal
-    animal : "lifestock" | "species" | person
+    plant : "tree" | "plant" | animal
+    animal : "lifestock" | "species" | "animal" | person
     living : plant
     socialobject :  group | organisation 
     group : "language group" | "group"
     organisation : "institution" | "association" | "community"   
-    functionalobject : "windmill" | "windfarm" | "road intersection" |  "road" | "sensor" | "tram line" | "metro line" | "the world’s economy"
-    place : "route" | "path" | "area" | "place" | "place of worship" | "house" | "building" | "settlement" | "city" | "neighborhood" | "municipality" | "hospital" | "ambulance station" | "address" | ("postcode " NUMBER " area") | "postcode identifier" | "territory" 
+    functionalobject : "solarpanel" | "windmill" | "windfarm" | "road intersection" |  "road" | "sensor" | "tram line" | "metro line" | "the world’s economy"
+    place : "route" | "forest" | "path" | "area" | "place" | "place of worship" | "house" | "building" | "settlement" | "city" | "neighborhood" | "municipality" | "hospital" | "ambulance station" | "address" | ("postcode " NUMBER " area") | "postcode identifier" | "territory" 
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     time : "time" 
     tr : "before" | "after" | "during" | "on" | "in"
@@ -42,25 +42,29 @@ identitydomainGrammar = '''
     movement : "movement" 
     action : "action" 
 '''
-
 amountGrammar = identitydomainGrammar + '''
     portion : stuff | amountofobjects
+    amount :  stuff | set | "sum of" ("the")? amount
     stuff : ("amount of" | "production of")? ("the")? (material | energy | value |  "exposure" | "weather" | "crop management practice" | "conservation measure" | STRING)
-    amountofobjects : (("amount of")? object ("s")?) | "population"
     material : "forest" | "rain" | "soil" | "water" | "green" | "landcover" | "CO2 emissions"| "NO2" | "ethanol" | "soil conditions" | "soil loss" | "wheat yield" | STRING
     value : "money" | "cost" | "tax" | "labour cost" | "health" | STRING
     energy : "temperature" | "energy" | "noise" | "air pressure" | STRING       
     set : ("interval of" quantity) | timeinterval | region | amountofobjects | (("amount of" | "set of")? ("(" spexperiment ")" | identityconcept) ("s")?)
+    amountofobjects : (("amount of")? object ("s")?) | "population" | "amount of people"
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
-    region : "region" | "amount of" space | "area" | "grid cell" 
-    amount :  stuff | set | "sum of" ("the")? amount 
+    region : "region" | "amount of" space | "area" | "grid cell"      
 '''
-#| quantity
 quantityGrammar = amountGrammar + '''
-    quantity : (quantifiedamount | "averaged" set | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" ) ("in" unit)? 
-    quantifiedamount : proportion | magnitude
-    proportion :  ("proportional" | "proportion of" | "density of" ("the")? | "normalized") amount      
-    magnitude : (("magnitude of" | "quantified" | "number of" | "capacity of" | "size of") ("the")? amount) |  (amount ("count" | "size" | "number") ("s")?)
+    quantity : (magnitude | proportion | ("averaged" set) ) ("in" unit)?     
+    magnitude : (("magnitude of" | "quantified" | "number of" | "capacity of" | "size of") ("the")? amount) |  (amount ("count" | "size" | "number") ("s")?) | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area"
+    proportion :  ("normalized" magnitude) |  monolithic | heterolithic
+    monolithic : continuousshare | discreteshare
+    continuousshare :  ("proportional" | "proportion of" | "fraction of" | "share of") stuff
+    discreteshare :  ("proportional" | "proportion of" | "fraction of" | "share of") set
+    heterolithic : density | "speed" | "tempo" | "power" | ppobject | ppunit
+    density : "density of" ("the")? magnitude
+    ppobject : "per object" magnitude
+    ppunit : "per unit" magnitude    
 '''
 predicatorGrammar = quantityGrammar + '''
     predicator : pair | quantity | thing | event | occurrence
@@ -154,7 +158,7 @@ parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
-        ,parser='earley', start='question', keep_all_tokens=True)
+        ,parser='earley', start='question', keep_all_tokens=True, debug=True)
 testquestions=[
 'What should be the amount of green for each neighborhood in "Amsterdam" now so that the proportional amount of NO2 will be below 20 µg/m³ this summer?',
 'What should be the location for each windmill of windfarm now so that the sum of amount of (energy for each windmill) for this windfarm will be maximal in the future?',
