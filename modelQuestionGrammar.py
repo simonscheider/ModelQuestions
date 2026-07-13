@@ -43,7 +43,7 @@ amountGrammar = identitydomainGrammar + '''
     value : "money" | "cost" | "tax" | "labour cost" | "health" | STRING
     energy : "temperature" | "energy" | "noise" | "air pressure" | STRING
     amount :  stuff | set | "sum of" ("the")? amount    
-    set : "interval of" (time | quantity) | region | amountofobjects | (("amount of" | "set of")? ("(" spexperiment ")" | identityconcept | quantity) ("s")?)
+    set : "interval of" (time | quantity) | timeinterval | region | amountofobjects | (("amount of" | "set of")? ("(" spexperiment ")" | identityconcept | quantity) ("s")?)
     quantity : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" | "population" | "population counts") ("in" unit)? 
     quantified : proportion | magnitude
     proportion :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
@@ -51,11 +51,6 @@ amountGrammar = identitydomainGrammar + '''
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
     region : "region" | "amount of" space | "area" 
 '''
-#| concept
-# concept: onec | twoc
-# onec: object | event | stuff | space | time | magnitude
-# twoc: onec "pair" | "pair of" onec
-
 predicatorGrammar = amountGrammar + '''
     predicator : pair | quantity | thing | event | occurrence
     pair : predicator "pair" | "pair of" predicator
@@ -144,7 +139,7 @@ experiments = [
 'tomorrow for each day in this year'
 ]
 
-#parsetrees(l_spEx,experiments)
+parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
