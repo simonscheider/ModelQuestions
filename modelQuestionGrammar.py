@@ -19,8 +19,16 @@ footer= r'''
 
 identitydomainGrammar = '''
     identityconcept : object | event | time | space | occurrence
-    object : "postcode identifier" | "tree"| "lifestock" | place | "building" | "city" | "neighborhood" | "municipality" | "hospital" | "inhabitant" | "windmill" | "windfarm" | ("ethanol")? "consumer" | ("ethanol")? "producer" | "ambulance station" | "road intersection" | "language group" | "route" | "sensor"| "the world’s economy"| "tram line" | "metro line" | "passenger" | "area" | "species" | "address" | "postcode 4 area" | "neighborhood" | "grid cell" | STRING
-    place : "place"
+    object : place | living | socialobject | functionalobject |  STRING
+    person : "inhabitant" | "person" | "passenger" | (stuff)? "consumer" | (stuff)? "producer"
+    plant : "tree" | animal
+    animal : "lifestock" | "species" | person
+    living : plant
+    socialobject :  group | organisation 
+    group : "language group" | "group"
+    organisation : "institution" | "association" | "community"   
+    functionalobject : "windmill" | "windfarm" | "road intersection" |  "road" | "sensor" | "tram line" | "metro line" | "the world’s economy"
+    place : "route" | "path" | "area" | "place" | "place of worship" | "house" | "building" | "settlement" | "city" | "neighborhood" | "municipality" | "hospital" | "ambulance station" | "address" | ("postcode " NUMBER " area") | "postcode identifier" | "territory" 
     event : "trip" | "period" | "earthquake" | "road accident" | "event" | STRING
     time : "time" 
     tr : "before" | "after" | "during" | "on" | "in"
@@ -37,28 +45,31 @@ identitydomainGrammar = '''
 
 amountGrammar = identitydomainGrammar + '''
     portion : stuff | amountofobjects
-    stuff : ("amount of")? (material | energy | value |  "exposure" | "weather" | "crop management practice" | "conservation measure" | STRING)
-    amountofobjects : ("amount of")? object ("s")?
+    stuff : ("amount of" | "production of")? ("the")? (material | energy | value |  "exposure" | "weather" | "crop management practice" | "conservation measure" | STRING)
+    amountofobjects : (("amount of")? object ("s")?) | "population"
     material : "forest" | "rain" | "soil" | "water" | "green" | "landcover" | "CO2 emissions"| "NO2" | "ethanol" | "soil conditions" | "soil loss" | "wheat yield" | STRING
     value : "money" | "cost" | "tax" | "labour cost" | "health" | STRING
-    energy : "temperature" | "energy" | "noise" | "air pressure" | STRING
-    amount :  stuff | set | "sum of" ("the")? amount    
-    set : "interval of" (time | quantity) | timeinterval | region | amountofobjects | (("amount of" | "set of")? ("(" spexperiment ")" | identityconcept | quantity) ("s")?)
-    quantity : (quantified amount | "averaged" amount | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" | "population" | "population counts") ("in" unit)? 
-    quantified : proportion | magnitude
-    proportion :  "proportional" | "proportion of" | "density of" ("the")? | "normalized"       
-    magnitude : "magnitude of" | "quantified" | "number of" | "capacity of" ("the")? | "production of" ("the")? 
+    energy : "temperature" | "energy" | "noise" | "air pressure" | STRING       
+    set : ("interval of" quantity) | timeinterval | region | amountofobjects | (("amount of" | "set of")? ("(" spexperiment ")" | identityconcept) ("s")?)
     timeinterval : "interval of" time | "travel time" | "time of the year" | "year" | "month" | "day" | "hour" | "minute" | "second"
-    region : "region" | "amount of" space | "area" 
+    region : "region" | "amount of" space | "area" | "grid cell" 
+    amount :  stuff | set | "sum of" ("the")? amount 
 '''
-predicatorGrammar = amountGrammar + '''
+#| quantity
+quantityGrammar = amountGrammar + '''
+    quantity : (quantifiedamount | "averaged" set | "magnitude" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | "canopy coverage area" ) ("in" unit)? 
+    quantifiedamount : proportion | magnitude
+    proportion :  ("proportional" | "proportion of" | "density of" ("the")? | "normalized") amount      
+    magnitude : (("magnitude of" | "quantified" | "number of" | "capacity of" | "size of") ("the")? amount) |  (amount ("count" | "size" | "number") ("s")?)
+'''
+predicatorGrammar = quantityGrammar + '''
     predicator : pair | quantity | thing | event | occurrence
     pair : predicator "pair" | "pair of" predicator
     thing : endurant | time | space | amount 
     endurant : object | portion       
 '''
 nominatorGrammar = predicatorGrammar + '''
-    nominator : objectnominator | temporalnominator | spatialnominator | ("this"|"that") predicator | optimal amount | quantityvalue | STRING
+    nominator : objectnominator | temporalnominator | spatialnominator | ("this"|"that") predicator | optimal set | quantityvalue | STRING
     objectnominator : placenominator | STRING
     placenominator :  "this" place | "the Netherlands"
     optimal : ("the")? ("maximal" | "minimal" | "maximum" | "minimum" | "closest" | "smallest" | "largest" | "shortest")  
@@ -75,7 +86,7 @@ spatialExperimentGrammar = nominatorGrammar + r'''
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | predicator            
     control : ("for" | "from" | "to" | "of" | spr) ("each"|"some")? (predicator)      
-    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr quantityvalue | quantityvalue | "with" optimal amount  
+    fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr quantityvalue | quantityvalue | ("with" optimal quantity) 
 '''
 questionGrammar =  spatialExperimentGrammar + r'''
     question :  (contemporary | prediction | retrodiction | projection | retrojection) ("?")?    
@@ -124,7 +135,7 @@ experiments = [
 'proportional amount of (space of green) for each neighborhood in "Amsterdam"',
 'quantified amount of (space of green) in kilometers for each neighborhood in "Amsterdam"',
 'averaged amount of (space of building) for each neighborhood in "Amsterdam"',
-'averaged amount of (quantified amount of height of building) for each neighborhood in "Amsterdam"',
+'averaged amount of (height of building) for each neighborhood in "Amsterdam"',
 'averaged amount of (quantified amount of green for each location) for each neighborhood in "Amsterdam"',
 'proportional amount of (space of green north of "Ij") for each neighborhood in "Amsterdam"',
 'number of (building of height larger than 5 meters) for each neighborhood in "Amsterdam"',
@@ -135,7 +146,7 @@ experiments = [
 'time before this earthquake',
 'amount of trees in "Utrecht"',
 'averaged amount of (magnitude of earthquake) in "Amsterdam"',
-'largest amount of money of each municipality',
+'largest (amount of money of each municipality)',
 'tomorrow for each day in this year'
 ]
 
@@ -158,12 +169,12 @@ testquestions=[
 
 #These are the questions used in the paper:
 questions =[
-'What is the shortest (time to ambulance station from each building) in "Rotterdam" at present?',
+'What is the shortest (duration to ambulance station from each building) in "Rotterdam" at present?',
 'What is the temperature for each location in "Utrecht" now given that the temperature for each (location of sensor) is such and such now?',
 'What will be the temperature in "Utrecht" tomorrow given that the temperature in "Utrecht" is 5 C today?',
 'What could have been the event in "Utrecht" yesterday causing the proportional amount of water for soil in "Utrecht" being 0.3 today?',
 'What would be the temperature in "Utrecht" in 20 years if the proportional amount of CO2 emissions of the world’s economy were halved today?',
-'What should be the amount of green in "Utrecht" today so that the maximal temperature for each location in "Utrecht" will be below 30 C this summer?',
+'What should be the amount of green in "Utrecht" today so that the maximal (temperature for each location) in "Utrecht" will be below 30 C this summer?',
 
 'What is the closest ambulance station for each building in "Rotterdam" at present given that the location of each ambulance station is such and such now?',
 'What will be the time to each building from the closest ambulance station in "Rotterdam" from now on given that the location of each ambulance station is such and such now?',
@@ -225,7 +236,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_control_mismatch",
         "display_question": "What was the average housing price for each area in Amsterdam in 2024?",
-        "parser_question": 'What is the averaged housing price for each area in "Amsterdam" in 2024?'
+        "parser_question": 'What is the averaged (housing price for each area) in "Amsterdam" in 2024?'
     },
     {
         "dataset_id": "HousingValue_Amsterdam_2024",
@@ -233,7 +244,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_mismatch",
         "display_question": "What was the amount of houses occupied by each interval of housing price in Amsterdam in 2024?",
-        "parser_question": 'What is the number of building for each interval of housing price in "Amsterdam" in 2024?'
+        "parser_question": 'What is the number of buildings for each interval of housing price in "Amsterdam" in 2024?'
     },
     {
         "dataset_id": "Earthquakes_Groningen_2025",
@@ -249,7 +260,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_mismatch",
         "display_question": "What was the number of earthquakes that were observed for each location in Groningen province in 2025?",
-        "parser_question": 'What is the number of earthquake for each location in "Groningen province" in 2025?'
+        "parser_question": 'What is the number of earthquakes for each location in "Groningen province" in 2025?'
     },
     {
         "dataset_id": "Earthquakes_Groningen_2025",
@@ -257,7 +268,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_mismatch",
         "display_question": "What was the duration of the latest earthquake in Groningen province in 2025?",
-        "parser_question": 'What is the duration of earthquake in "Groningen province" in 2025?'
+        "parser_question": 'What is the duration of earthquakes in "Groningen province" in 2025?'
     },
     {
         "dataset_id": "MetroLines_Amsterdam",
@@ -273,7 +284,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_control_mismatch",
         "display_question": "What is the amount of metro lines crossing each area in Amsterdam now?",
-        "parser_question": 'What is the number of metro line for each area in "Amsterdam" now?'
+        "parser_question": 'What is the number of metro lines for each area in "Amsterdam" now?'
     },
     {
         "dataset_id": "MetroLines_Amsterdam",
@@ -281,7 +292,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_mismatch",
         "display_question": "What is the number of passengers that use each metro or tram line in Amsterdam right now?",
-        "parser_question": 'What is the number of passenger for each tram line in "Amsterdam" now?'
+        "parser_question": 'What is the number of passengers for each tram line in "Amsterdam" now?'
     },
     {
         "dataset_id": "Noise_Amsterdam_2021",
@@ -473,7 +484,7 @@ survey_questions = [
         "is_correct": True,
         "mismatch_type": None,
         "display_question": "What was the minimum temperature for each sensor location in the Netherlands on April 27, 2024?",
-        "parser_question": 'What is the minimal temperature for each (location of sensor) in "the Netherlands" on April 27, 2024?'
+        "parser_question": 'What is the minimal (temperature for each (location of sensor)) in "the Netherlands" on April 27, 2024?'
     },
     {
         "dataset_id": "Rainfall_Sensors_NL",
