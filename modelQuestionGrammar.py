@@ -21,7 +21,7 @@ identitydomainGrammar = '''
     identityconcept : object | event | time | space | occurrence
     object : place | living | socialobject | functionalobject |  STRING
     person : "inhabitant" | "person" | "passenger" | (stuff)? "consumer" | (stuff)? "producer"
-    plant : "tree" | "plant" | animal
+    plant : "tree" | "plant" | "species" | animal
     animal : "lifestock" | "species" | "animal" | person
     living : plant
     socialobject :  group | organisation 
