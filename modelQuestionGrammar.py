@@ -58,7 +58,7 @@ quantityGrammar = amountGrammar + '''
     linearquantity : (magnitude | proportion | ("averaged" set) ) ("in" unit)?     
     magnitude : numberof | areaof | durationof | measurement | (("magnitude of" | "quantified" | "capacity of" | "size of") ("the")? amount) |  (amount ("magnitude" | "size" ) ("s")?) | "magnitude" 
     measurement : "number" | "temperature" | "duration" | "length" | "distance" | "height" | "housing price" | (STRING? "area")
-    numberof : ("number of" | "size of") ("the")? set |  set ("count" | "number")
+    numberof : ("number of" | "size of") ("the")? set |  set ("count" | "number")("s")?
     areaof : ("area of" | "size of") ("the")? region
     durationof : ("duration of") ("the")? (timeinterval | event)
     proportion :  monolithic | heterolithic
@@ -96,7 +96,7 @@ nominatorGrammar = predicatorGrammar + '''
 spatialExperimentGrammar = nominatorGrammar + r'''    
     spexperiment: (measure)+ (control)* (fix)* 
     measure : nominator | predicator            
-    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some") (predicator)      
+    control : ("for" | "from" | "to" | "of" | spr) ("each"|"some") ("element of" set | predicator)      
     fix : tr temporalnominator | spr spatialnominator | ("for" | "from" | "to" | "of" | spr) nominator |  nominator |  compr quantityvalue | quantityvalue | ("with" optimal linearquantity) 
 '''
 questionGrammar =  spatialExperimentGrammar + r'''
@@ -181,7 +181,7 @@ parsetrees(l_questions,testquestions)
 #These are the questions used in the paper:
 questions =[
 'What is the shortest (duration of travel time to some ambulance station from each building) in "Rotterdam" at present?',
-'What is the temperature for each location in "Utrecht" now given that the temperature for each (location of each sensor) is such and such now?',
+'What is the temperature for each location in "Utrecht" now given that the temperature for each element of (location of each sensor) is such and such now?',
 'What will be the temperature in "Utrecht" tomorrow given that the temperature in "Utrecht" is 5 C today?',
 'What could have been the event in "Utrecht" yesterday causing the proportional amount of water for all soil in "Utrecht" being 0.3 today?',
 'What would be the temperature in "Utrecht" in 20 years if the proportional amount of CO2 emissions of the world’s economy were halved today?',
@@ -216,7 +216,7 @@ survey_questions = [
         "is_correct": True,
         "mismatch_type": None,
         "display_question": "What is the concentration of NO₂ for each location of some sensor in Amsterdam in 2025?",
-        "parser_question": 'What is the quantified amount of NO2 for each (location of each sensor) in "Amsterdam" now?'
+        "parser_question": 'What is the quantified amount of NO2 for each element of (location of each sensor) in "Amsterdam" now?'
     },
     {
         "dataset_id": "NO2_Amsterdam_2025",
@@ -232,7 +232,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "temporal_mismatch",
         "display_question": "What will be concentration of NO₂ for each location of some sensor in Amsterdam in 2026?",
-        "parser_question": 'What will be the quantified amount of NO2 for each (location of each sensor) in "Amsterdam" in the future given that the quantified amount of NO2 for each (location of each sensor) is such and such now?'
+        "parser_question": 'What will be the quantified amount of NO2 for each element of (location of each sensor) in "Amsterdam" in the future given that the quantified amount of NO2 for each element of (location of each sensor) is such and such now?'
     },
     {
         "dataset_id": "HousingValue_Amsterdam_2024",
@@ -344,7 +344,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_control_mismatch",
         "display_question": "What is the amount of space covered by the amount of trees for each interval of tree height in Amsterdam now?",
-        "parser_question": 'What is the amount of space of each (amount of trees for each interval of height) in "Amsterdam" now?'
+        "parser_question": 'What is the amount of space of each element of (amount of trees for each interval of height) in "Amsterdam" now?'
     },
     {
         "dataset_id": "Trees_Amsterdam",
@@ -352,7 +352,7 @@ survey_questions = [
         "is_correct": False,
         "mismatch_type": "measure_mismatch",
         "display_question": "What is the total canopy coverage area for each tree species in Amsterdam now?",
-        "parser_question": 'What is the region for each (amount of canopy for each species) in "Amsterdam" now?'
+        "parser_question": 'What is the region for each element of (amount of canopy for each species) in "Amsterdam" now?'
     },
     {
         "dataset_id": "PostcodeAreas_Amsterdam",
@@ -386,14 +386,14 @@ survey_questions = [
         "display_question": "What is the population for each 1 km² grid cell in the Netherlands?",
         "parser_question": 'What is the population for each grid cell in "the Netherlands" now?'
     },
-    # {
-    #     "dataset_id": "PopulationDensity_Netherlands",
-    #     "option_id": "B",
-    #     "is_correct": False,
-    #     "mismatch_type": "measure_control_mismatch",
-    #     "display_question": "What is the amount of space for each interval of population counts in the Netherlands?",
-    #     "parser_question": 'What is the amount of space for each (interval of population counts in "the Netherlands" now?'
-    # },
+    {
+        "dataset_id": "PopulationDensity_Netherlands",
+        "option_id": "B",
+        "is_correct": False,
+        "mismatch_type": "measure_control_mismatch",
+        "display_question": "What is the amount of space for each interval of population counts in the Netherlands?",
+        "parser_question": 'What is the amount of space for each interval of population counts in "the Netherlands" now?'
+    },
     {
         "dataset_id": "PopulationDensity_Netherlands",
         "option_id": "C",
@@ -496,7 +496,7 @@ survey_questions = [
         "is_correct": True,
         "mismatch_type": None,
         "display_question": "What was the minimum temperature for each sensor location in the Netherlands on April 27, 2024?",
-        "parser_question": 'What is the minimal (temperature for each (location of each sensor)) in "the Netherlands" on April 27, 2024?'
+        "parser_question": 'What is the minimal (temperature for each element of (location of each sensor)) in "the Netherlands" on April 27, 2024?'
     },
     {
         "dataset_id": "Rainfall_Sensors_NL",
@@ -504,7 +504,7 @@ survey_questions = [
         "is_correct": True,
         "mismatch_type": None,
         "display_question": "What was the rainfall amount for each sensor location in the Netherlands on March 30, 2024?",
-        "parser_question": 'What is the quantified amount of rain for each (location of each sensor) in "the Netherlands" on March 30, 2024?'
+        "parser_question": 'What is the quantified amount of rain for each element of (location of each sensor) in "the Netherlands" on March 30, 2024?'
     },
     {
         "dataset_id": "Hospitals_NL",
