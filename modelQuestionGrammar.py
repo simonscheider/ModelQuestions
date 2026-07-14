@@ -22,7 +22,7 @@ identitydomainGrammar = '''
     object : place | living | socialobject | functionalobject |  STRING
     person : "inhabitant" | "person" | "passenger" | (stuff)? "consumer" | (stuff)? "producer"
     plant : "tree" | "plant" | "species" | animal
-    animal : "lifestock" | "species" | "animal" | person
+    animal : "lifestock" |  "animal" | "species" | person
     living : plant
     socialobject :  group | organisation 
     group : "language group" | "group"
@@ -63,7 +63,7 @@ quantityGrammar = amountGrammar + '''
     durationof : ("duration of") ("the")? (timeinterval | event)
     proportion :  monolithic | heterolithic
     monolithic : continuousshare | discreteshare
-    continuousshare :  ("proportional" | "proportion of" | "fraction of" | "share of") stuff | stuff
+    continuousshare :  ("proportional" | "proportion of" | "fraction of" | "share of") stuff
     discreteshare :  ("proportional" | "proportion of" | "fraction of" | "share of") set
     heterolithic : density | power | ppobject | ppunit | "speed" | "tempo" | "power"
     density : "density of" ("the")? amount ("per" region)?
@@ -161,7 +161,7 @@ experiments = [
 'tomorrow for each day in this year'
 ]
 
-#parsetrees(l_spEx,experiments)
+parsetrees(l_spEx,experiments)
 
 
 l_questions = Lark(questionGrammar  + footer
@@ -176,7 +176,7 @@ testquestions=[
 'What would be the proportional amount of (space of all green) for each neighborhood in "Amsterdam" in the future if the quantified amount of building was such and such now?',
 'What should be the proportional amount of (space of all green) for each neighborhood in "Amsterdam" now such that the quantified amount of health for each inhabitant will be such and such in the future?',
 ]
-#parsetrees(l_questions,testquestions)
+parsetrees(l_questions,testquestions)
 
 #These are the questions used in the paper:
 questions =[
@@ -197,7 +197,7 @@ questions =[
 'What should be the location of each ambulance stations in "Rotterdam" now such that the travel time to each building from the closest ambulance station will be less than 14 minutes in the future?',
 'What should be the location for each windmill of this windfarm now so that the sum of the (amount of energy for each windmill of this windfarm) will be maximal in the future?'
 ]
-#parsetrees(l_questions,questions)
+parsetrees(l_questions,questions)
 
 
 
